@@ -1,0 +1,12 @@
+Certificate: c28_131 (as for C28; same 322,267 files, manifest sha256 aa971abada11367af738f9e72b7c7d5f48e4b6f5e70e7d360989a4af07efdf16).
+Proof: kernel only (decide +kernel), tools/run_m4.sh (tools/kc_jobs.py --group-leaves 3000 --seg-leaves 4).
+Size: 322,266 jobs, 15,250,196 leaves, 3,974,838 kernel-checked segments; 43,140 check modules + 43,140
+assembly modules + Params + Main + Forms; 184 GB of Lean source, 159 GB of .olean.
+Resources: export 10.4 min (370 workers, with an exact integer re-check of every leaf); check modules
+1,561 CPU-h (0.37 CPU-s per leaf with all hardware threads busy), at most 3.0 GB resident per check module
+(median 2.7 GB); the root assembly module, Main and Forms about 30 s each and 160 GB resident (mmapped imports).
+Wall time 3 h 25 min on two 384-thread servers: one built 17,214 check modules, the other the rest
+(tools/build_dag.py --exclude), then the assembly took 5.7 min. Some module builds were repeated after two
+scheduler restarts.
+Theorems: Autocorr.KC28.autocorr_lower, Autocorr.KC28.autocorr_lower_ess, Autocorr.KC28.autocorr_lower_real.
+Axioms (axioms.txt): propext, Classical.choice, Quot.sound, for all three.

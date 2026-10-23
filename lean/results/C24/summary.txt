@@ -1,0 +1,8 @@
+Certificate: c24_130 (format 1), n = 24, lam = 13/10. Not archived publicly.
+Files read by the exporter: 13,975, manifest sha256 702c8a305edc0ef83157aff3c038f5a5909196a532898ebcdc2e27f35d21bf75.
+Proof: native_decide (tools/export_jobs.py, one module per job; tools/run_m3.sh with GROUP_LEAVES=0).
+Size: 13,974 jobs, 2,801,076 leaves, 13,975 modules, 29 GB of Lean source, 30 GB of .olean.
+Resources: export 36 s, build 3.9 min wall, 6.5 CPU-h on a 384-thread server.
+Theorem: Autocorr.C24.autocorr_lower (built before the essential-supremum and real forms existed).
+Axioms (axioms.txt.gz): propext, Classical.choice, Quot.sound and 13,975 native_decide auxiliary axioms.
+build_modules.tsv.gz: this early run logged only the scheduler's wall time per module.

@@ -1,0 +1,18 @@
+Autocorr.KC28.autocorr_lower : ∀ (f : ℝ → ENNReal),
+  Measurable f →
+    131 / 100 * (∫⁻ (x : ℝ) in Set.Icc (-1 / 4) (1 / 4), f x) ^ 2 ≤
+      ⨆ t ∈ Set.Icc (-1 / 2) (1 / 2), ∫⁻ (x : ℝ), f (t - x) * f x
+'Autocorr.KC28.autocorr_lower' depends on axioms: [propext, Classical.choice, Quot.sound]
+Autocorr.KC28.autocorr_lower_ess : ∀ (f : ℝ → ENNReal),
+  Measurable f →
+    131 / 100 * (∫⁻ (x : ℝ) in Set.Icc (-1 / 4) (1 / 4), f x) ^ 2 ≤
+      essSup (fun t => ∫⁻ (x : ℝ), f (t - x) * f x) (MeasureTheory.volume.restrict (Set.Icc (-1 / 2) (1 / 2)))
+'Autocorr.KC28.autocorr_lower_ess' depends on axioms: [propext, Classical.choice, Quot.sound]
+Autocorr.KC28.autocorr_lower_real : ∀ (f : ℝ → ℝ),
+  Measurable f →
+    (∀ (x : ℝ), 0 ≤ f x) →
+      (∀ x ∉ Set.Icc (-1 / 4) (1 / 4), f x = 0) →
+        ENNReal.ofReal (131 / 100 * (∫ (x : ℝ), f x) ^ 2) ≤
+          MeasureTheory.eLpNorm (MeasureTheory.convolution f f (ContinuousLinearMap.mul ℝ ℝ) MeasureTheory.volume) ⊤
+            (MeasureTheory.volume.restrict (Set.Icc (-1 / 2) (1 / 2)))
+'Autocorr.KC28.autocorr_lower_real' depends on axioms: [propext, Classical.choice, Quot.sound]

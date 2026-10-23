@@ -1,0 +1,14 @@
+C36T: the c36t certificate (n = 36, lambda = 133/100) checked in Lean 4 with native_decide.
+
+Theorems: Autocorr.C36T.autocorr_lower, autocorr_lower_ess, autocorr_lower_real (C_1 >= 133/100 in the pointwise-
+supremum, essential-supremum and real-convolution forms).
+Axioms (each theorem): propext, Classical.choice, Quot.sound and 2,419,680 auxiliary axioms created by native_decide
+(one per job of the certificate, plus one for the root box); no other axiom.
+Input: the filled certificate (every leaf with the exact dual accepted by the verifier), 2,419,679 job files,
+2,118.5 GB compressed; its sha256 list is filled_certificate.sha256.gz.
+Modules: 490,435 shard modules in 202 shards (6,372 complete subtrees), one table module, 64 check modules for the 620
+jobs at the top of the tree, and the top module Autocorr.C36T.Gro.Groot, which imports everything once.
+Compute, for one build from the filled certificate: about 2,200 CPU-hours, of which about 1,300 compile the shard
+modules (measured per module) and about 900 generate their sources (the exporter, about 0.018 CPU-seconds per leaf,
+measured on a complete shard); on 202 servers with 96 to 384 threads this took about 25 minutes of wall time. The top
+module took about 20 minutes on one server with 360 threads, most of it importing the 4.6 TB of compiled shard modules.

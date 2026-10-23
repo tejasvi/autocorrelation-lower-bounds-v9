@@ -1,0 +1,5 @@
+Autocorr.KC20.autocorr_lower : ∀ (f : ℝ → ENNReal),
+  Measurable f →
+    32 / 25 * (∫⁻ (x : ℝ) in Set.Icc (-1 / 4) (1 / 4), f x) ^ 2 ≤
+      ⨆ t ∈ Set.Icc (-1 / 2) (1 / 2), ∫⁻ (x : ℝ), f (t - x) * f x
+'Autocorr.KC20.autocorr_lower' depends on axioms: [propext, Classical.choice, Quot.sound]

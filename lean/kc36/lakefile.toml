@@ -1,0 +1,30 @@
+name = "Autocorr"
+version = "0.1.0"
+keywords = ["math"]
+defaultTargets = ["Autocorr"]
+
+[leanOptions]
+pp.unicode.fun = true
+relaxedAutoImplicit = false
+autoImplicit = false
+weak.linter.style.header = false
+
+# Lower bound for the first autocorrelation constant (GGSTW arXiv:2511.02864, Problem 6.2).
+# Toolchain leanprover/lean4:v4.35.0-rc3; Mathlib at tag v4.35.0-rc3 (commit c55e6e786f49, see lake-manifest.json).
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+rev = "v4.35.0-rc3"
+
+[[lean_lib]]
+name = "Autocorr"
+
+# The certificate checker (core Lean only), compiled to native code so that `native_decide`
+# in the generated job modules runs compiled code instead of the IR interpreter.
+[[lean_lib]]
+name = "AutocorrCert"
+precompileModules = true
+
+# Kernel checker (core Lean, evaluated by the kernel: milestone M4).
+[[lean_lib]]
+name = "AutocorrK"

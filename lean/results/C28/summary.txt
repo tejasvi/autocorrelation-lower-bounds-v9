@@ -1,0 +1,10 @@
+Certificate: c28_131 (format 1), n = 28, lam = 131/100. Not archived publicly (about 80 GB).
+Files read by the exporter: 322,267, manifest sha256 aa971abada11367af738f9e72b7c7d5f48e4b6f5e70e7d360989a4af07efdf16.
+Proof: native_decide (tools/export_jobs.py --group-leaves 3000).
+Size: 322,266 jobs, 15,250,196 leaves, 43,140 group modules + Main, 217 GB of Lean source, 219 GB of .olean.
+Resources: export 7:11, build 13:32 wall (+2:19 for a resume after a memory-cap change), 61 CPU-h on a
+384-thread server.
+Theorem: Autocorr.C28.autocorr_lower (built before the essential-supremum and real forms existed; the
+kernel-only proof KC28 has all three forms).
+Axioms (axioms.txt.gz): propext, Classical.choice, Quot.sound and 322,267 native_decide auxiliary axioms.
+build_modules.tsv.gz: this early run logged only the scheduler's wall time per module.

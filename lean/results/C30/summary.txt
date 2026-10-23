@@ -1,0 +1,12 @@
+Certificate: c30_132m (format 2: square cuts, cut tables, compressed leaves; checked in Python by
+checker/verify_cmp.py), n = 30, lam = 33/25.
+Public: c30_132m_cert.tar on Zenodo, doi:10.5281/zenodo.23480605, sha256 0aa4923334b4c089a7be957bc6297db4cd30d9f45b67a43fafb987eb0381d761.
+Files read by the exporter: 290,309, manifest sha256 e805206b842db705dbc40bbd79e23857761d48c1e145da401c81c8ea4db77e07,
+equal to the manifest of the published archive's members.
+Proof: native_decide with the extended checker, tools/run_m3x.sh (tools/export_jobsx.py --group-leaves 3000).
+Size: 290,308 jobs, 24,935,952 leaves, 67,740 group modules + Zo + Main + Forms, 101 GB of Lean source.
+Resources: export 3.4 min; build 24 min wall, 134 CPU-h on a 384-thread server (plus 2,611 modules built
+before a restart of the scheduler), at most 23 GB resident (Main, mmapped imports).
+Theorems: Autocorr.C30.autocorr_lower, Autocorr.C30.autocorr_lower_ess, Autocorr.C30.autocorr_lower_real.
+Axioms: axioms.txt.gz (autocorr_lower) and forms_axioms.txt (statements of the two other forms, axioms of
+autocorr_lower_real): propext, Classical.choice, Quot.sound and 290,309 native_decide auxiliary axioms.

@@ -1,0 +1,12 @@
+Certificate: c20_128 (format 1; checked in Python by checker/verify.py), n = 20, lam = 32/25.
+Public: c20_128_cert.tar on Zenodo, doi:10.5281/zenodo.23480605, sha256 10d9a6d89b0dc082babb221859a2593f48762aaa91a1b4af0ad8cbf6eb3a492c.
+Files read by the exporter (meta.json + jobs/*.jsonl.gz): 426, manifest sha256 c55c8714f8b60d53fcd2232259ce316ed69aa0173e1b35dd6619395e8dedfc53
+(tools/cert_manifest.py; the same value for the extracted archive).
+Proof: native_decide, tools/run_m3.sh (tools/export_jobs.py + tools/build_dag.py with the precompiled checker).
+Size: 425 jobs, 113,761 leaves, 355 group modules + Main + Forms.
+Resources: export 50 s; build of the 357 modules about 0.25 CPU-h, at most 6.5 GB resident per process,
+on a shared 384-thread server with 12-24 workers (15 modules were killed by the memory manager of that shared
+server and rebuilt; the build is make-like).
+Theorems: Autocorr.C20.autocorr_lower, Autocorr.C20.autocorr_lower_ess, Autocorr.C20.autocorr_lower_real.
+Axioms (axioms.txt): propext, Classical.choice, Quot.sound and 426 native_decide auxiliary axioms
+(one per job, Autocorr.C20.J<k>.chk._native.native_decide.ax_1_1, and Autocorr.C20.rootOK._native...).

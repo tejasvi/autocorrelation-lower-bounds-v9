@@ -1,0 +1,13 @@
+Autocorr.C39T (n = 39, lambda = 267/200): axioms by per-module scan (tools/nscan.lean over every .olean of the package,
+read with readModuleData, no import of the closure) + the axioms of the external references (tools/nscan_ext.lean,
+library-only session).
+modules 249578  constants 54714712  violations 0
+package axioms: 13678677 native_decide auxiliary axioms (name ...._native.native_decide.ax_1_1, type `decide p = true`)
+  deciding Autocorr.Cert.checkJobStrX ...  13678676   (one per job: the job's records against the checker)
+  deciding Option.isSome (rootOK)          1
+  any other axiom declared in the package: none
+banned references (sorryAx, Lean.ofReduceBool, Lean.ofReduceNat, Lean.trustCompiler, foreign _native): none
+external references: 117, all present in the library-only session (missing 0)
+axioms of the external references: propext, Classical.choice, Quot.sound
+=> axioms(Autocorr.C39T.autocorr_lower / _ess / _real) are contained in {propext, Classical.choice, Quot.sound}
+   plus the 13,678,677 native_decide axioms (same shape as C36T: std 3 + one per job + rootOK).

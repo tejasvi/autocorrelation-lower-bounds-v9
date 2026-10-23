@@ -1,0 +1,8 @@
+Certificate: c20_128 (as for C20; same 426 files, manifest sha256 c55c8714f8b60d53fcd2232259ce316ed69aa0173e1b35dd6619395e8dedfc53).
+Proof: kernel only (decide +kernel), tools/kc_jobs.py + tools/build_dag.py; an earlier layout of the generated
+modules (one module per job, segments of at most 16 leaves); tools/run_m4.sh produces the current layout.
+Size: 425 jobs, 113,761 leaves, 7,363 kernel-checked segments, 427 modules (708 MB of Lean source).
+Resources: export 10 s; build 951 s wall, 2.9 CPU-h (0.091 CPU-s per leaf) on a 384-thread server,
+at most 3.1 GB resident per check module (Main 7.3 GB).
+Theorem: Autocorr.KC20.autocorr_lower.
+Axioms (axioms.txt): propext, Classical.choice, Quot.sound.

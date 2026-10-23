@@ -1,0 +1,689 @@
+\documentclass[11pt]{amsart}
+\pdfsuppressptexinfo=-1
+\usepackage[margin=1.1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,enumitem}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{pdftitle={Certified lower bounds for the first and the signed third autocorrelation constants},
+  pdfauthor={Tejasvi Singh Tomar}}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\numberwithin{equation}{section}
+\setlength{\emergencystretch}{2em}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\one}{\mathbf{1}}
+\newcommand{\LB}{\operatorname{LB}}
+\newcommand{\re}{\operatorname{Re}}
+\newcommand{\im}{\operatorname{Im}}
+\newcommand{\esssup}{\operatorname*{ess\,sup}}
+\newcommand{\LeanNAxioms}{$13{,}678{,}677$}
+\newcommand{\LeanNAxiomsB}{$2{,}419{,}680$}
+\newcommand{\LeanNRow}{$490{,}501$ modules; about $2{,}200$ CPU-hours on $202$ servers to generate and compile the shard modules, and about $20$ min on one server for the top module}
+% Headline values of the C_1 bound.
+\newcommand{\LAM}{\tfrac{267}{200}}
+\newcommand{\Cone}{1.335}
+\newcommand{\Nbins}{39}
+\newcommand{\Nleaves}{527{,}163{,}006}
+\newcommand{\NleavesNoData}{527{,}163{,}004}
+\newcommand{\Njobs}{13{,}678{,}676}
+\newcommand{\Nnodes}{1{,}054{,}326{,}011}
+\newcommand{\MinLeaf}{1.3350000000004\ldots}
+\newcommand{\MinLeafGap}{5\cdot10^{-13}}
+\newcommand{\MinLeafIndep}{1.33500000040\ldots}
+\newcommand{\LProws}{17{,}085}
+\newcommand{\LPcols}{3{,}158}
+\newcommand{\SidonSq}{400/267}
+\newcommand{\SidonVal}{1.2240}
+% The smaller certificate of V_36 >= 133/100, checked in Lean (Section 5).
+\newcommand{\NleavesB}{177{,}077{,}986}
+\newcommand{\NjobsB}{2{,}419{,}679}
+% Archive record and repository of this paper.
+\newcommand{\SuppDOI}{10.5281/zenodo.23585545}
+\newcommand{\RepoLink}{\url{https://github.com/tejasvi/autocorrelation-lower-bounds-v9}}
+% Headline values of the bound for the signed constants (C_3 >= C_3' >= \CthrPFrac, from one one-sided certificate).
+\newcommand{\PinPoint}{\tfrac{153}{50}-\tfrac35i}
+\newcommand{\PinPointTwo}{\tfrac{159}{50}+\tfrac{6}{25}i}
+\newcommand{\CapTwoP}{1.277}
+\newcommand{\CapTwo}{1.282}
+\newcommand{\CapThree}{1.31}
+\newcommand{\CapThreeCirc}{1.32}
+\newcommand{\SecondCheckerName}{\texttt{indep\_three\_level.py}}
+% The bound of Theorem 1.3 and the threshold of its certificate.
+\newcommand{\TauThrP}{\tfrac14}
+\newcommand{\CthrPFrac}{\tfrac43}
+\newcommand{\CthrPDec}{4/3}
+% Entries of Table 3 in the 4/3 variant (nested certificate, tau = 1/4).
+\newcommand{\QEps}{10^{-6}}
+\newcommand{\QTabE}{276}
+\newcommand{\QTabH}{2{,}182}
+\newcommand{\QTabNodes}{$15{,}172{,}398$; $15{,}100{,}886$; $7{,}924{,}564$}
+\newcommand{\QTabHard}{7{,}993{,}894}
+\newcommand{\QTabChain}{8}
+\newcommand{\QTabTubes}{2}
+\newcommand{\QTabTArcs}{506{,}448{,}728}
+\newcommand{\QTabTauN}{81{,}508}
+\newcommand{\QTabTauMax}{101/400}
+\newcommand{\QTabFile}{one\_sided\_tau1\_4\_parts.tar}
+\newcommand{\QTabSize}{25{,}152{,}471{,}040}
+\newcommand{\QTabGB}{25.2}
+\newcommand{\QTabTimeOne}{$3$ h $27$ min}
+\newcommand{\QTabTimeTwo}{$1$ h $39$ min on four servers with $384$ threads, two at a time}
+\newcommand{\QSymTail}{; the certificate of Table~\ref{tab:signed} is checked on every interval of $[0,1]$}
+\newcommand{\QIndepM}{103}
+\newcommand{\QTabSha}{311796500af5dcdf61c36b2d9aa9e9f752b43afccaa49ff830c39be2ef919d87}
+\newcommand{\QCheckSentence}{The checks described below confirm that its intervals subdivide $[0,1]$, that the tile arcs of every witness subdivide the parameter interval of its tile, and that the conditions of Definitions~\ref{def:cert} and~\ref{def:nested} hold.}
+% The bound of the Lean proofs of Section 6 (certificate with tau = 6/25).
+\newcommand{\LeanSigFrac}{\tfrac{25}{19}}
+\newcommand{\LeanSigSlash}{25/19}
+\newcommand{\LeanSigDec}{1.31578}
+% Lean proof of the bound 25/19 by native_decide (Section 6, Table 4): intervals of T_1, checks (= modules), CPU-hours, minutes on one server.
+\newcommand{\LeanSInt}{2{,}374}
+\newcommand{\LeanSChecks}{2{,}375}
+\newcommand{\LeanSCPU}{124}
+\newcommand{\LeanSWall}{27}
+% Kernel-only proof of the bound 25/19 (Section 6, Table 4): modules, CPU-hours, hours, servers, threads per server.
+\newcommand{\LeanKMods}{41{,}353}
+\newcommand{\LeanKCPU}{13{,}900}
+\newcommand{\LeanKWall}{3.2}
+\newcommand{\LeanKServers}{12}
+\newcommand{\LeanKThreads}{384}
+% Entries of Table 3.
+\newcommand{\TabE}{270}
+\newcommand{\TabH}{672}
+\newcommand{\TabHthree}{1{,}432}
+\newcommand{\TabR}{19761/12500}
+\newcommand{\TabRtwo}{3189/6250}
+\newcommand{\TabPinRow}{$P_1$, $P_2$ on the intervals of the third level in the upper half of $T_1$, their mirror images on those in the lower half; half-widths $\TabR$ and $\TabRtwo$}
+\newcommand{\TabLeafE}{66{,}632}
+\newcommand{\TabLeafW}{278{,}804}
+\newcommand{\TabWit}{279{,}476}
+\newcommand{\TabTauA}{268}
+\newcommand{\TabTauB}{596}
+\newcommand{\TabTiles}{centre (semi-axes $a$, $b$): $2.797\pm0.1117i$ ($0.4884$, $0.5721$), $2.7705\pm0.0962i$ ($0.4469$, $0.6524$), $2.5566\pm0.0172i$ ($0.7848$, $0.7995$), $2.6205\pm0.0787i$ ($0.664$, $0.9048$), $4.55\pm0.25i$ ($0.45$, $0.45$), $4.5\pm0.3i$ ($0.3$, $0.4$), $4.57\pm0.157i$ ($0.73$, $0.92$), $6.35$ ($0.67$, $1$)}
+\newcommand{\TabTArcs}{47{,}863{,}352}
+\newcommand{\TabFile}{one\_sided\_tau6\_25.json.gz}
+\newcommand{\TabSize}{2{,}686{,}181{,}087}
+\newcommand{\TabMB}{2{,}686}
+\newcommand{\TabGBun}{10.64}
+\newcommand{\TabThreads}{384}
+\newcommand{\TabTimeOne}{$38$ min}
+\newcommand{\TabTimeTwo}{$13$ min}
+\newcommand{\TabSha}{2a76bd9b523ac8991bf99c5a8a00e9eefca84b867dc2a1b558cfa2d3eaa686d8}
+% Strip-bound comparison (Section 6, floating-point reporting only).
+\newcommand{\StripRatio}{2.3}
+\newcommand{\StripTwice}{426}
+\newcommand{\StripH}{2{,}104}
+\newcommand{\StripFail}{1{,}574}
+\newcommand{\StripSlack}{2.5\cdot10^{-5}}
+
+
+\raggedbottom
+\begin{document}
+
+\title[Lower bounds for autocorrelation constants]{Certified lower bounds for the first and the signed third autocorrelation constants}
+\author{Tejasvi Singh Tomar}
+\renewcommand{\urladdrname}{{\itshape ORCID}}
+\urladdr{\href{https://orcid.org/0000-0003-4668-3639}{https://orcid.org/0000-0003-4668-3639}}
+\subjclass[2020]{42A85, 11B83; 30C15, 65G30, 90C26, 90C57, 68V05}
+\keywords{Autoconvolution, autocorrelation inequality, Sidon sets, branch and bound, linear programming duality, argument principle, ball arithmetic, computer-assisted proof, Lean}
+
+\begin{abstract}
+Let $C_1$ be the largest constant such that $\sup_{|t|\le 1/2}\int f(t-x)f(x)\,dx\ge C_1\bigl(\int_{-1/4}^{1/4}f\bigr)^2$ for all nonnegative functions $f$ on the real line. This constant governs the size of large generalized Sidon sets, and it is Problem~6.2 in the list of Georgiev, G\'omez-Serrano, Tao and Wagner. The previous lower bounds include $1.28$ by Cloninger and Steinerberger and $1.2937$ by Kim and Pilanci. We prove $C_1\ge \Cone$. Consequently, for all large $g$, the largest $g$-Sidon sets in $\{1,\dots,N\}$ have fewer than $\SidonVal\sqrt{gN}$ elements once $N$ is large. The proof starts from a reduction of Cloninger and Steinerberger: for each $n$, $C_1$ is at least a finite min-max $V_n$ of quadratic forms in the masses of $f$ on $n$ equal bins. We bound $V_{\Nbins}$ from below by a spatial branch-and-bound over block masses. A linear relaxation with McCormick inequalities and square cuts closes the regions of the search. The search tree is accepted by two checkers, which evaluate the dual bounds exactly. For signed integrable $f$ on $[-1/4,1/4]$, Problem~6.4 of the same list asks for the best constants $C_3$ and $C_3'$ in $\max|f*f|\ge C_3(\int f)^2$ and $\max f*f\ge C_3'(\int f)^2$. The list gives no lower bound above~$1$. We prove $C_3\ge C_3'\ge \CthrPDec$. If $f*f$ were constant on $[-1/2,1/2]$, the square of the Fourier transform of $f$ would be a multiple of $\sin(\pi z)/(\pi z)$, which has simple zeros. This square has only zeros of even order, and the argument principle on a curve around~$1$ and on auxiliary curves makes this quantitative. A checker in ball arithmetic verifies our certificate in full, and a second checker with a different enclosure method, written separately, verifies a seeded random sample of its parts. A checker proved sound in the Lean~4 proof assistant accepts the certificate for $C_1$ through compiled evaluation, after the tree has been completed with dual vectors, which gives a formal proof of $C_1\ge\Cone$. The bound $C_1\ge1.33$ also has a proof checked by the Lean kernel alone. For the signed constants, the weaker bound $C_3\ge C_3'\ge\LeanSigDec$ has two Lean proofs, one through compiled evaluation and one checked by the Lean kernel alone. %
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}\label{sec:intro}
+
+For $f\colon\R\to[0,\infty]$ write $(f*f)(t)=\int_\R f(t-x)f(x)\,dx\in[0,\infty]$. Following \cite{AE25}, we call the largest constant $C$ such that
+\begin{equation}\label{eq:ineq}
+\sup_{-1/2\le t\le 1/2}(f*f)(t)\;\ge\;C\Bigl(\int_{-1/4}^{1/4}f(x)\,dx\Bigr)^2
+\end{equation}
+for all measurable $f\colon\R\to[0,\infty]$ the \emph{first autocorrelation constant} $C_1$. It is Problem~6.2 of \cite{GGTW25}. Restricting $f$ to $[-1/4,1/4]$ does not increase the left side, so $C_1$ is also the infimum of $\sup(f*f)/(\int f)^2$ over nonnegative $f$ supported in $[-1/4,1/4]$. Schinzel and Schmidt \cite{SS02} studied this quantity and conjectured that $C_1=\pi/2$.
+
+The constant comes from additive combinatorics. A set $A\subseteq\{1,\dots,N\}$ is a $g$-Sidon set if $|\{(a,b)\in A\times A:a+b=m\}|\le g$ for all $m$. Cilleruelo, Ruzsa and Vinuesa \cite{CRV10} proved that the largest $g$-Sidon set in $\{1,\dots,N\}$ has between $\underline\sigma(g)\sqrt{gN}(1-o(1))$ and $\overline\sigma(g)\sqrt{gN}(1+o(1))$ elements as $N\to\infty$, where $\underline\sigma(g)$ and $\overline\sigma(g)$ both tend to a constant $\sigma$ as $g\to\infty$. They also expressed $\sigma$ through the continuous problem, and in our normalization $\sigma^2=2/C_1$ \cite[Section 1.2]{CS17}.
+
+Explicit step functions give the best upper bounds for $C_1$. Matolcsi and Vinuesa \cite{MV10} found $C_1\le 1.5098$, which disproved the conjecture of Schinzel and Schmidt. Computer searches \cite{AE25,GGTW25} and later programs \cite{EA26,Jana26} have lowered the bound below $1.5028$. Lower bounds, however, have moved slowly. Cloninger and Steinerberger list the earlier ones \cite[Section 1.2]{CS17}, which end with the bound $C_1\ge1.2748$ of Matolcsi and Vinuesa \cite{MV10} (quoted as $1.2749$ in \cite{CS17}). They reduced the problem to a finite min-max over mass vectors, replaced the simplex of mass vectors by a lattice, and proved $C_1\ge 1.28$ by a large enumeration. Ivanisvili and Xie \cite{IX26} sharpened an error term of that computation to obtain $1.2802$. Piterbarg, Bajaj and Vincent report $C_1\ge1.292$ \cite{PBV26}. Kim and Pilanci \cite{KP26} proved $C_1\ge 1.2937$ with a semidefinite relaxation, and they checked its dual solution in interval arithmetic.
+
+\begin{theorem}\label{thm:main}
+$C_1\ge\LAM$. That is, \eqref{eq:ineq} holds with $C=\Cone$ for every measurable $f\colon\R\to[0,\infty]$.
+\end{theorem}
+
+The proof also works with the essential supremum in place of the supremum.
+
+\begin{corollary}\label{cor:sidon}
+In the notation above, $\sigma\le\sqrt{\SidonSq}<\SidonVal$.
+\end{corollary}
+
+\subsection*{The method}
+Cloninger and Steinerberger observed that the masses $p_i=\int_{B_i}f$ of $f$ on $n$ equal bins $B_i$ already force $f*f$ to be large somewhere. If $c_1\le i+j\le c_2$, then $B_i+B_j$ lies in an interval $J$ of length $(c_2-c_1+2)/(2n)$, so $\sup_J f*f$ is at least the averaged mass $q_{c_1c_2}(p)$ of \eqref{eq:q}. Hence $C_1\ge V_n$, where $V_n$ is the minimum over the simplex of the largest of these averages (Lemma~\ref{lem:window}). This inequality has no discretization error, and since we work on the continuous simplex, the lattice error that limited \cite{CS17} does not arise. We prove $V_{\Nbins}\ge\LAM$ (Theorem~\ref{thm:Vn}).
+
+The function $p\mapsto\max_{c_1\le c_2}q_{c_1c_2}(p)$ is a maximum of indefinite quadratic forms, but convex relaxations of the whole minimization are weak. The uniform mixture of the $n$ vertices of $\Delta_n$ has second moment matrix $\frac1n I$, and for this matrix all averaged forms are at most~$1$. A relaxation that contains the convex hull of the points $(p,pp^{T})$ with $p\in\Delta_n$ therefore has value at most~$1$. We split the simplex into regions and relax on the regions separately. Following the multiscale idea of \cite{CS17}, the regions are boxes for the block masses $m_D$ of a binary tree of bins (Section~\ref{sec:bb}), so that coarse masses are resolved before fine ones. On a region we replace the products $m_Dm_E$ by variables bounded by the four McCormick inequalities \cite{McC76}, and the window averages become linear. We tighten this relaxation by valid inequalities $(v_0+v_Dm_D+v_Em_E)^2\ge0$ in the spirit of Sherali and Fraticelli \cite{SF02}. A linear program then bounds the maximum of the averages on the region from below, and its dual vector certifies the bound (Lemma~\ref{lem:duality}).
+
+\subsection*{Verification}
+The certificate (Table~\ref{tab:cert}) consists of the search tree: the split decisions and, for each leaf, a record that the leaf is closed. We check it with a checker written in Python, which rebuilds the constraints from their definitions, recomputes the regions from the split decisions, and checks that the leaves cover the region \eqref{eq:half}. For each leaf except the two that carry a dual vector, the checker solves the linear relaxation itself, in floating point with HiGHS \cite{HiGHS}, and obtains a dual vector by the procedure of Section~\ref{sec:computation}. It accepts a leaf only if the bound of Lemma~\ref{lem:duality}, evaluated exactly, is at least $\LAM$. Every vector with the signs required there is admissible, and the checker sets entries of the wrong sign to zero, so the solver need not be trusted: a poor solution can only make the check fail. A second checker, which differs from the first in its exact arithmetic and its linear-programming code (Section~\ref{sec:computation}), accepts every leaf of the search logs, the files written by the search, in which most leaves carry a dual vector. Appendix~\ref{app:files} relates these logs to the archived certificate.
+
+We formalized the reduction of Section~\ref{sec:reduction}, the reversal symmetry and the soundness of a checker in Lean~4 \cite{Lean4} with Mathlib \cite{Mathlib}. The Lean checker re-implements the constraints of Section~\ref{sec:bb} and proves them valid. The formal theorem states \eqref{eq:ineq} with $C=267/200$ for measurable $f\colon\R\to[0,\infty]$ with lower Lebesgue integrals. We also derive in Lean the stronger statement with the essential supremum, and a version for measurable $f\colon\R\to\R$ that is nonnegative and vanishes outside $[-1/4,1/4]$, stated with Mathlib's convolution and the $L^\infty$ norm on $[-1/2,1/2]$. An exporter translates the search logs into Lean source. Before export, every leaf that lacks a dual vector receives one that a variant of the first checker accepted (Appendix~\ref{app:files}). Since the formal theorem does not mention the certificate, the exporter need not be trusted. The Lean checker accepts the certificate completed in this way through \texttt{native\_decide}, which lets Lean accept the result of compiled code as a proof step, so the trusted base includes the compiler. The final theorem depends on Lean's three standard axioms and on \LeanNAxioms{} further axioms. Each records the result of a compiled evaluation: one per job (a subtree of the search, Section~\ref{sec:computation}) and one for the root region. We also wrote a checker for evaluation by the Lean kernel alone. It has checked the certificates for $V_{20}\ge 32/25$ and $V_{28}\ge131/100$ from Section~\ref{sec:remarks} and, in a version extended to square constraints and to $n=36$, the certificate for $V_{36}\ge133/100$. Hence $C_1\ge1.33$ has a formal proof that depends only on Lean's three standard axioms. This proof has too many modules for one process to load, so that statement rests on a scan of every module for axioms; Appendix~\ref{app:files} describes the proof and an audit that repeated this scan with separate code.
+
+\subsection*{Signed functions}
+If $f$ takes negative values, then $f*f$ can be negative as well. For an integrable function $f\colon\R\to\R$ that vanishes almost everywhere outside $[-1/4,1/4]$, the function $f*f$ is integrable and vanishes almost everywhere outside $[-1/2,1/2]$. Let $C_3$ and $C_3'$ be the largest constants such that
+\begin{equation}\label{eq:signed}
+\esssup_{t\in\R}\,|(f*f)(t)|\ge C_3\Bigl(\int f\Bigr)^2\quad\text{and}\quad\esssup_{t\in\R}\,(f*f)(t)\ge C_3'\Bigl(\int f\Bigr)^2
+\end{equation}
+for all such $f$. Problem~6.4 of \cite{GGTW25} asks for these constants, stated with the maximum over $|t|\le1/2$ and with $|\max_t(f*f)(t)|$ on the left of the second inequality. For $f\in L^2$ the function $f*f$ is continuous, so the maximum exists and equals the essential supremum. The absolute value in the second inequality of \cite{GGTW25} does not matter, because $\esssup(f*f)\ge\int_{-1/2}^{1/2}f*f=(\int f)^2$. For integrable $f$, the supremum of $f*f$ over any set of full measure on which it is defined is at least its essential supremum, so lower bounds for the constants in \eqref{eq:signed} hold for either reading. The notation $C_3$ follows \cite{AE25}, and the repository of optimization constants \cite{OC26} calls $C_3$ the signed third autocorrelation constant. Clearly $C_3'\le C_3\le C_1$, and averaging $f*f$ over $[-1/2,1/2]$ gives $C_3'\ge1$. The problem list \cite{GGTW25} gives no lower bound for either constant, and \cite{OC26} gives only this trivial bound for $C_3$. Step functions give $C_3\le1.4631$ \cite{OC26}, and a step function with $600$ cells gives $C_3\le1.4603$ \cite{Ger26}; we checked this value in exact rational arithmetic. A step function with $800$ cells is reported to give $C_3\le1.4579$ \cite{KKHL26}, and a step function that gives about $1.4489$ for $C_3'$ is reported in \cite{Jana26}. Earlier upper bounds are listed in \cite{GGTW25} and \cite[Table~1 and Appendix~A.5]{BKPZ26}.
+
+\begin{theorem}\label{thm:signed}
+Let $f\colon\R\to\R$ be integrable, vanish almost everywhere outside $[-1/4,1/4]$, and satisfy $\int f\neq0$. Then
+\[
+\esssup_{t\in\R}\,|(f*f)(t)|\ge\esssup_{t\in\R}\,(f*f)(t)>\CthrPFrac\Bigl(\int f\Bigr)^2.
+\]
+Consequently $C_3\ge C_3'\ge\CthrPFrac>\CthrPDec$.
+\end{theorem}
+
+We prove Theorem~\ref{thm:signed} in Section~\ref{sec:signed}. Let $\int f=1$, let $M$ be the essential supremum of $f*f$, and let $w=\one_{[-1/2,1/2]}-(f*f)/M$. Then $w\ge0$ almost everywhere and $\int w=1-1/M$. With $S(z)=\sin(\pi z)/(\pi z)$, we have $\hat f(z)^2=M\bigl(S(z)-\hat w(z)\bigr)$ for complex $z$. All zeros of $\hat f^2$ have even order, but $S$ has a simple zero at $z=1$. Hence, for some $\lambda\in(0,1]$, the function $S-\lambda\hat w$ vanishes at a point $z$ of a fixed ellipse around~$1$. At this point, $S(z)$ lies in a convex set whose size is proportional to $1-1/M$. If $M$ is small, a line separates the two on part of the ellipse. On the rest, the crossing confines the value of $\hat w$ at a nearby point to a thin neighbourhood of a ray. Under this constraint an argument of the same kind on a second ellipse, around the zero~$3$ of $S$, shows that $S-\hat w$ has a zero of odd order, which is impossible. Where this second step fails on part of that ellipse, a crossing there confines $\hat w$ further, and we repeat the argument under the new constraint, with further ellipses near~$3$, $4.5$ and~$6.4$. This gives $M>\CthrPFrac$, and the same bound holds for $|f*f|$ because $|f*f|\ge f*f$. A program in ball arithmetic checks the whole certificate, and a second program with a different enclosure method, written separately, checks a seeded random sample of $\QIndepM$ of its $2{,}048$ parts. A certificate whose last step instead divides the possible values of $\hat w$ at two points near~$3$ into products of boxes gives the weaker bound $\LeanSigSlash$, and this bound has two formal proofs in Lean, one of them checked by Lean's kernel alone (Section~\ref{sec:signed}). 
+
+\section{Reduction to a finite problem}\label{sec:reduction}
+
+Fix $n\ge1$ and put $h=1/(2n)$. For $0\le i<n$ let $B_i=[-\tfrac14+ih,\,-\tfrac14+(i+1)h)$, and let
+\[
+\Delta_n=\Bigl\{p\in\R^n:\ p_i\ge0,\ \textstyle\sum_i p_i=1\Bigr\}.
+\]
+For $0\le c_1\le c_2\le 2n-2$ and $p\in\Delta_n$ define
+\begin{equation}\label{eq:q}
+q_{c_1c_2}(p)=\frac{2n}{c_2-c_1+2}\sum_{c_1\le i+j\le c_2}p_ip_j,
+\end{equation}
+where the sum runs over ordered pairs $(i,j)\in\{0,\dots,n-1\}^2$. Let $F_n(p)=\max_{c_1\le c_2}q_{c_1c_2}(p)$ and $V_n=\min_{p\in\Delta_n}F_n(p)$.
+
+\begin{lemma}[Cloninger--Steinerberger]\label{lem:window}
+$C_1\ge V_n$ for every $n\ge1$.
+\end{lemma}
+
+\begin{proof}
+Let $f$ be measurable and nonnegative, and let $g=f\one_{[-1/4,1/4)}$. Then $g*g\le f*f$ pointwise and $\int g=\int_{-1/4}^{1/4}f$. If this integral is zero there is nothing to prove. If it is infinite, then $\int_{-1/2}^{1/2}g*g=(\int g)^2=\infty$ by Tonelli's theorem, so the left side of \eqref{eq:ineq} is infinite. Otherwise we scale so that $\int g=1$. We write $g=\sum_ig_i$ with $g_i=g\one_{B_i}$ and put $p_i=\int g_i$, so that $p\in\Delta_n$. All terms of $g*g=\sum_{i,j}g_i*g_j$ are nonnegative, and $g_i*g_j$ vanishes outside $B_i+B_j\subseteq[-\tfrac12+(i+j)h,-\tfrac12+(i+j+2)h]$. For $c_1\le c_2$ let $J=[-\tfrac12+c_1h,-\tfrac12+(c_2+2)h]\subseteq[-\tfrac12,\tfrac12]$. If $c_1\le i+j\le c_2$, then $B_i+B_j\subseteq J$, and $\int_Jg_i*g_j=p_ip_j$ by Tonelli's theorem. Hence
+\[
+|J|\sup_J g*g\;\ge\;\int_Jg*g\;\ge\sum_{c_1\le i+j\le c_2}p_ip_j,
+\]
+and $\sup_{|t|\le1/2}g*g\ge q_{c_1c_2}(p)$ because $|J|=(c_2-c_1+2)h$. We take the maximum over $c_1\le c_2$ and obtain $\sup g*g\ge F_n(p)\ge V_n$. The same argument works with the essential supremum on $J$, which also bounds $|J|^{-1}\int_Jg*g$ from above.
+\end{proof}
+
+The reversal $p_i\mapsto p_{n-1-i}$ maps the pair $(c_1,c_2)$ to $(2n-2-c_2,2n-2-c_1)$ and preserves $c_2-c_1$, so it preserves $F_n$. One of $p$ and its reversal satisfies $\sum_i(2i-n+1)p_i\le0$. Therefore
+\begin{equation}\label{eq:half}
+V_n=\min\Bigl\{F_n(p):\ p\in\Delta_n,\ \textstyle\sum_i(2i-n+1)p_i\le0\Bigr\}.
+\end{equation}
+
+\begin{theorem}\label{thm:Vn}
+$V_{\Nbins}\ge\LAM$.
+\end{theorem}
+
+Theorem~\ref{thm:main} follows from Lemma~\ref{lem:window} and Theorem~\ref{thm:Vn}, and Corollary~\ref{cor:sidon} follows from Theorem~\ref{thm:main} and $\sigma^2=2/C_1$. Since our proof also gives \eqref{eq:ineq} with the essential supremum, the corollary holds in either normalization. We prove Theorem~\ref{thm:Vn} in Section~\ref{sec:computation}.
+
+\section{Regions and their relaxations}\label{sec:bb}
+
+\subsection{Regions} Let $\mathcal{T}$ be the balanced binary tree of bin intervals. Its root is $\{0,\dots,n-1\}$, an interval with more than one bin has its two halves as children (the left half has $\lfloor\cdot/2\rfloor$ bins), and its leaves are the single bins. For a block $D\in\mathcal{T}$ put $m_D=\sum_{i\in D}p_i$. A \emph{region} is a set
+\[
+R=\Bigl\{p\in\Delta_n:\ L_D\le m_D\le U_D\ (D\in\mathcal{T}),\ \textstyle\sum_i(2i-n+1)p_i\le0\Bigr\}
+\]
+with rational bounds. The root region has $L_D=0$ and $U_D=1$. A region is split at a block $D$ and a rational $s$ with $L_D<s<U_D$ into the regions with $U_D$ replaced by $s$ and with $L_D$ replaced by $s$. After a split the bounds are tightened by the rules $m_D=m_{D_1}+m_{D_2}$ for the children $D_1,D_2$ of $D$ and $m_{\mathrm{root}}=1$, applied until they no longer change. A region whose tightened bounds cross is empty.
+
+\subsection{The relaxation} For $p$ in a region $R$ we consider the point $x(p)$ with the following coordinates: $m_D$ for $D\in\mathcal{T}$; $Z_{ij}=p_ip_j$ for $i\le j$, where $Z_{ji}$ stands for $Z_{ij}$; $Z_{DE}=m_Dm_E$ for pairs of non-root blocks that are not both single bins (for two single bins, $Z_{DE}$ stands for the corresponding $Z_{ij}$); the band masses $P_c=\sum_{i+j=c}p_ip_j$ over ordered pairs and their partial sums $G_c=P_0+\dots+P_c$ for $0\le c\le 2n-2$; and $t=F_n(p)$. This point satisfies the following constraints.
+\begin{enumerate}[label=(\roman*)]
+\item\label{c:win} Window constraints $\frac{2n}{c_2-c_1+2}(G_{c_2}-G_{c_1-1})-t\le0$ for $0\le c_1\le c_2\le 2n-2$, with $G_{-1}=0$.
+\item Band, tree and product constraints: the definitions of $P_c$ and $G_c$, the identities $m_D=m_{D_1}+m_{D_2}$, and the identities $Z_{DE}=Z_{D_1E}+Z_{D_2E}$ (or $Z_{DD}=Z_{D_1D_1}+2Z_{D_1D_2}+Z_{D_2D_2}$).
+\item Simplex constraints $\sum_jZ_{ij}=p_i$ for each $i$, which hold because $\sum_jp_j=1$. These are reformulation-linearization constraints in the sense of Sherali and Adams \cite{SA90}.
+\item The symmetry constraint $\sum_i(2i-n+1)p_i\le0$.
+\item\label{c:mc} McCormick constraints: for each pair of non-root blocks $D,E$, the four inequalities that state $(m_D-L_D)(m_E-L_E)\ge0$, $(U_D-m_D)(U_E-m_E)\ge0$, $(m_D-L_D)(U_E-m_E)\ge0$ and $(U_D-m_D)(m_E-L_E)\ge0$ after $m_Dm_E$ is replaced by $Z_{DE}$.
+\item\label{c:sq} Square constraints: for integers $v_0,v_D,v_E$ and distinct non-root blocks $D,E$, the inequality obtained from $(v_0+v_Dm_D+v_Em_E)^2\ge0$ by expanding the square and replacing the products of block masses by the corresponding variables $Z$.
+\item The bounds $L_D\le m_D\le U_D$, $0\le Z,P,G\le1$ and $0\le t\le3$, the last one whenever $F_n(p)\le 3$.
+\end{enumerate}
+
+\begin{lemma}\label{lem:duality}
+Write finitely many of these constraints as $\ell_r\le a_r\cdot x\le u_r$ with $\ell_r,u_r\in\Q\cup\{\pm\infty\}$, and the bounds as $b^-\le x\le b^+$. Let $y$ be a rational vector with $y_r\le0$ whenever $\ell_r=-\infty$ and $y_r\ge0$ whenever $u_r=\infty$, and put $\rho=e_t-\sum_ry_ra_r$. If
+\[
+\LB(y)=\sum_{y_r>0}y_r\ell_r+\sum_{y_r<0}y_ru_r+\sum_c\min(\rho_cb^-_c,\rho_cb^+_c)\;\ge\;\lambda
+\]
+for some $\lambda\le3$, then $F_n(p)\ge\lambda$ for every $p\in R$.
+\end{lemma}
+
+\begin{proof}
+Suppose $p\in R$ and $F_n(p)<\lambda$. Then $x=x(p)$ satisfies all constraints and bounds, and $t=\rho\cdot x+\sum_ry_r(a_r\cdot x)\ge\LB(y)\ge\lambda$, a contradiction.
+\end{proof}
+
+The quantity $\LB(y)$ is the safe dual bound of Neumaier and Shcherbina \cite{NS04}, valid for any $y$ with the stated signs, optimal or not.
+
+\section{The computation}\label{sec:computation}
+
+\subsection{The search} Throughout this section $n=\Nbins$ and $\lambda=\LAM$. We solved the linear programs with the open-source solver HiGHS \cite{HiGHS} in double precision. At $n=\Nbins$ the relaxation without square constraints has $\LProws$ rows and $\LPcols$ columns. Window and McCormick constraints enter the linear programs lazily, when the current solution violates them. We obtain square constraints from an eigenvector of the matrix $\begin{psmallmatrix}1&m_D&m_E\\m_D&Z_{DD}&Z_{DE}\\m_E&Z_{DE}&Z_{EE}\end{psmallmatrix}$ for its smallest eigenvalue at the current solution, scaled and rounded to integers. When the linear program at a node does not close it, we give every block $D$ the score $\sum_E|Z_{DE}-m_Dm_E|\,(1+20\,w_{DE}/\max w)$, where $w_{DE}$ is the sum of the absolute duals of the pair's McCormick constraints. We split the block with the largest score at its mass in the optimal solution, clipped to the middle half of its interval. Splits are made at multiples of $2^{-30}$, so that the search propagates bounds exactly in floating point, in agreement with the rational propagation in the checkers.
+
+We distributed the tree over $\Njobs$ subtrees, which we call \emph{jobs}; each job is stored as one log file. The root job expands the tree to depth~$8$ and delegates the $182$ open nodes there as new jobs. Every other job is processed depth-first by one worker, which delegates the unexplored nodes as new jobs once it has processed its budget of nodes. The budget only decides where jobs are cut. At $526{,}747{,}638$ leaves the search stored a compressed dual vector, as in the certificates with stored dual vectors of Section~\ref{sec:remarks}. Its entries on most rows and on the square constraints are integers divided by a power of~$2$, and the checkers complete the remaining entries as the format in the repository specifies. The search stored such a vector only if it passed a floating-point check. Each other leaf is recorded without data if its floating-point bound is at least $\lambda+10^{-7}$; this holds for $415{,}366$ leaves. Otherwise the leaf is recorded with its dual vector and its square constraints, which the checkers read exactly. Two leaves are of this kind; they carry $35$ and $55$ square constraints. The archived certificate replaces every compressed dual vector by a record without data, so that the checkers find their own dual vectors there.
+
+\subsection{The check} We call the two programs the first checker and the second checker; their files, and the definitions that the first checker shares with the search, are listed in Appendix~\ref{app:files}. For a leaf without data, the first checker solves the relaxation of its region, with window and McCormick constraints added when they are violated. If this does not give a bound of at least $\lambda$, it adds square constraints from the $20$ pairs of blocks whose matrices above have the most negative smallest eigenvalues below $-10^{-6}$, with the eigenvector scaled to maximum norm~$1$, multiplied by $2^{20}$ and rounded to integers, for at most $20$ rounds. Window, McCormick and square constraints found at earlier leaves of the same job stay in the linear program until they have carried no dual weight for more than $40$ leaves, and the solver stops as soon as the objective exceeds $\lambda+10^{-6}$. The checker rounds the duals that it found for the rows to multiples of $2^{-64}$ and those for the square constraints to multiples of $2^{-128}$, and it evaluates $\LB(y)$ exactly in integer arithmetic; the dual vectors stored with the two leaves recorded with data are evaluated as stored, in rational arithmetic.
+
+\begin{proof}[Proof of Theorem~\ref{thm:Vn}]
+We check each job separately: we recompute its root region from the splits on its path, follow its depth-first record, and recompute the child regions. Every node of a job receives exactly one record, a split, a delegation or a leaf, and no record is left over. A child whose tightened bounds cross would be empty and need no leaf, but no such child occurs. At a leaf recorded without data the checker first computes a dual vector $y$ as described above. At every leaf it evaluates $\LB(y)$ exactly and finds $\LB(y)\ge\LAM$, so Lemma~\ref{lem:duality} gives $F_{\Nbins}\ge\LAM$ on the leaf region. The smallest value of $\LB(y)$ that it finds, $\MinLeaf$, exceeds $\lambda$ by about $\MinLeafGap$. A final pass confirms three facts: every delegated subtree is the root of exactly one job, all jobs are reachable from the root job, and the delegation graph has no cycles. Because a delegated region and the root region of its job are recomputed from the same path, they coincide. The two children of a split cover their parent, so the leaf regions cover the region \eqref{eq:half}, and \eqref{eq:half} gives $V_{\Nbins}\ge\LAM$. The first checker performs these steps on the archived certificate, and also on the search logs (Appendix~\ref{app:files}). The Lean checker repeats the region, record, bound and partition checks on these logs, completed as described in Section~\ref{sec:intro}.
+\end{proof}
+
+The second checker differs from the first in the following respects.
+\begin{enumerate}[label=(\alph*)]
+\item It evaluates $\LB(y)$ in rational arithmetic. It rounds the duals that it finds to multiples of $2^{-50}$; for a square inequality, whose linear program carries a rescaled copy of the row, it rounds the dual of that copy and undoes the scaling. A stored dual vector is evaluated as stored.
+\item Its linear programs manage their rows differently and restart with other settings when they stall, and an exact Farkas test (which no leaf needed) handles infeasible leaf programs.
+\item It recomputes the regions and checks the records of each job before it solves any linear program for that job, and its final step identifies every job file by its SHA-256 and then checks the partition as the first checker does.
+\item It tests a stored dual vector, which it first completes if it is stored in compressed form, before it searches for its own.
+\end{enumerate}
+We ran it on the search logs (Appendix~\ref{app:files}). It accepted all $\Nleaves$ leaves. At $526{,}747{,}638$ of these leaves and at the two leaves recorded with data, the stored dual vector passed the test in~(d). At the other $415{,}366$ leaves, the second checker accepted the leaf with a dual vector that it found. The smallest bound $\LB(y)$ with which it accepted a leaf is $\MinLeafIndep$.
+
+Appendix~\ref{app:files} lists the program files and the solver version, and records how the checker runs were organized.
+
+\begin{table}[ht]
+\centering
+\caption{The certificate of Theorem~\ref{thm:Vn} and the cost of the computation.}\label{tab:cert}
+\small
+\begin{tabular}{@{}lp{0.50\textwidth}@{}}
+\toprule
+Bins $n$ and bound $\lambda$ & $\Nbins$, $\LAM$\\
+Nodes of the search tree & $\Nnodes$\\
+Leaves & $\Nleaves$ ($\NleavesNoData$ without data, two with a dual vector)\\
+Jobs (subtrees) & $\Njobs$\\
+Smallest exact leaf bound (archived form) & $\MinLeaf$\\
+LP rows (no squares); columns & $\LProws$; $\LPcols$\\
+Archive \texttt{c39t\_V39\_1335\_certificate.tar.zst} & $11{,}024{,}238{,}839$ bytes\\
+Search (wall time) & $285$ min on up to $487$ servers ($62{,}018$ worker processes), about $187{,}800$ CPU-hours\\
+First checker, archived certificate & about $320{,}000$ worker-hours on $487$ servers in $7$~h~$15$~min\\
+Second checker (search logs) & about $15{,}300$ worker-hours on $487$ servers with $32{,}954$ worker processes\\
+Lean check (\texttt{native\_decide}) & $249{,}578$ modules; about $6{,}400$ CPU-hours on $137$ servers and one more for the jobs near the root, $2$~h~$16$~min\\
+\midrule
+\multicolumn{2}{@{}l}{SHA-256 of the archive\quad\texttt{\scriptsize 645b58d0ca44563331e5b5e438ae0cd7bd5e64f8f2982cd1416c3e3b519fb9ac}}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Remarks}\label{sec:remarks}
+
+\subsection*{Limits of the reduction} We list in Table~\ref{tab:Vn} upper bounds for $V_n$, each from an explicit mass vector found by a local search from random starting points and evaluated exactly. Independent runs agree on all digits shown. We release such vectors for $2\le n\le24$, for $n=26,28,\dots,36$ and for $n=39$. For $2\le n\le19$ the value is below $1.2937$, and $V_1=1$, so the reduction needs at least $20$ bins to improve on \cite{KP26}. Since $V_{39}\le1.349505$, Theorem~\ref{thm:Vn} is within $0.0146$ of the best bound available at $n=39$.
+
+\begin{table}[ht]
+\centering
+\caption{Upper bounds for $V_n$ from explicit mass vectors, rounded up.}\label{tab:Vn}
+\begin{tabular}{@{}rlrlrlrl@{}}
+\toprule
+$n$ & $V_n\le$ & $n$ & $V_n\le$ & $n$ & $V_n\le$ & $n$ & $V_n\le$\\
+\midrule
+12 & 1.243365 & 19 & 1.292579 & 23 & 1.308665 & 30 & 1.331221\\
+16 & 1.271793 & 20 & 1.294443 & 24 & 1.312492 & 32 & 1.335788\\
+17 & 1.281014 & 21 & 1.299660 & 26 & 1.320130 & 34 & 1.338779\\
+18 & 1.283145 & 22 & 1.304949 & 28 & 1.325596 & 36 & 1.342202\\
+ & & & & & & 39 & 1.349505\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection*{Smaller certificates} Table~\ref{tab:small} lists further certificates and the programs that accepted them. The certificate for $V_{36}\ge133/100$, with $\NjobsB$ jobs, comes from a search of the same kind as in Section~\ref{sec:computation}, with $n=36$ and $\lambda=133/100$ and without compressed dual vectors; one leaf carries a dual vector and $21$ square constraints. The certificate for $V_{30}\ge33/25$ stores the dual vector of every leaf, for most leaves in compressed form. The certificate for $V_{20}\ge32/25$ gives an independent proof of the bound $C_1\ge1.28$ of \cite{CS17}. With the same branching rule, the square constraints reduced the number of leaves by a factor of $2.5$ at $n=20$ and $2.3$ at $n=24$. For the checker that runs in the Lean kernel alone, the duals of the rows of the certificates for $V_{20}\ge32/25$, $V_{28}\ge131/100$ and $V_{36}\ge133/100$ were rounded to multiples of $2^{-64}$, and the duals of the square constraints of the last certificate were rounded down to nonnegative multiples of $2^{-94}$; every leaf was checked again exactly with the rounded duals.
+
+\begin{table}[ht]
+\centering
+\caption{Further certificates and the programs that accepted them. Python checkers: (a) both checkers of Theorem~\ref{thm:Vn}; (b) a checker for certificates that store the dual vector of every leaf; (c) the checker for certificates without square constraints. The Lean checker accepted all five through \texttt{native\_decide} (Section~\ref{sec:intro}).}\label{tab:small}
+\small
+\begin{tabular}{@{}lrccc@{}}
+\toprule
+Certificate & Leaves & Square constraints & Python checker & Lean kernel alone\\
+\midrule
+$V_{36}\ge133/100$ & $\NleavesB$ & yes & (a) & yes\\
+$V_{30}\ge33/25$ & $24{,}935{,}952$ & yes & (b) & --\\
+$V_{28}\ge131/100$ & $15{,}250{,}196$ & no & (c) & yes\\
+$V_{24}\ge13/10$ & $2{,}801{,}076$ & no & (c) & --\\
+$V_{20}\ge32/25$ & $113{,}761$ & no & (c) & yes\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{The signed third autocorrelation constant}\label{sec:signed}
+
+In this section we prove Theorem~\ref{thm:signed}. Let $f$ be as in the theorem. Replacing $f$ by $f/\int f$ multiplies $f*f$ by the positive number $(\int f)^{-2}$, so we may assume $\int f=1$. Let $g=f*f$. Then $g$ is integrable, it vanishes almost everywhere outside $[-1/2,1/2]$, and $\int g=1$ by Fubini's theorem. In the \emph{one-sided case} let $M=\esssup g$, and in the \emph{two-sided case} let $M=\esssup|g|$. If $M=\infty$ there is nothing to prove, so let $M<\infty$. Since $g\le M$ almost everywhere on $[-1/2,1/2]$ and $\int_{-1/2}^{1/2}g=1$, we have $M\ge1$. Let $w=\one_{[-1/2,1/2]}-g/M$. After a change on a null set, $w\ge0$, $w$ vanishes outside $[-1/2,1/2]$, and $\int w=1-1/M$. In the two-sided case $g\ge-M$ almost everywhere, and we may also assume $w\le2$.
+
+For $z\in\C$ and $t\in\R$ let
+\[
+F(z)=\hat f(z)=\int f(x)e^{-2\pi ixz}\,dx,\qquad K_t(z)=e^{-2\pi itz},\qquad S(z)=\int_{-1/2}^{1/2}K_t(z)\,dt=\frac{\sin\pi z}{\pi z},
+\]
+with $S(0)=1$. For a finite Borel measure $\mu$ on $[-1/2,1/2]$ let $\hat\mu(z)=\int K_t(z)\,d\mu(t)$ and $G_\mu=S-\hat\mu$. We identify an integrable function $\rho$ on $[-1/2,1/2]$ with the measure $\rho(t)\,dt$. The functions $F$, $\hat\mu$ and $G_\mu$ are entire. Since $\iint|f(x)f(y)K_{x+y}(z)|\,dx\,dy\le\|f\|_1^2e^{\pi|\im z|}$, Fubini's theorem gives $\int g(t)K_t(z)\,dt=F(z)^2$, and therefore
+\begin{equation}\label{eq:FS}
+F(z)^2=M\,G_w(z),\qquad z\in\C.
+\end{equation}
+The zeros of $S$ are the nonzero integers, and they are simple because $S'(n)=(-1)^n/n$. Since $F(0)=\int f=1$, the function $F$ is not identically zero, and by \eqref{eq:FS} every zero of $G_w$ has even order.
+
+For $\tau>0$ let $\mathcal A_\tau$ be the set of nonnegative Borel measures on $[-1/2,1/2]$ of total mass at most $\tau$, and let $\mathcal A^2_\tau$ be the set of measurable functions $\rho\colon[-1/2,1/2]\to[0,2]$ with $\int\rho\le\tau$. Both sets are convex and closed under multiplication by numbers in $[0,1]$, and $\mathcal A^2_\tau\subseteq\mathcal A_\tau$. We call $\mathcal A_\tau$ the class of the one-sided case and $\mathcal A^2_\tau$ the class of the two-sided case. If $1-1/M\le\tau$, then $w$ belongs to the class of its case (for the same $\tau$). The certificates below rule this out, because they show that $G_\mu$ has a zero of odd order for every $\mu$ in the class (Propositions~\ref{prop:multilevel} and~\ref{prop:nested}).
+
+\begin{lemma}[first level]\label{lem:crossing}
+Let $\mu$ be a finite Borel measure on $[-1/2,1/2]$, and let $\Gamma$ be a piecewise smooth Jordan curve that passes through no zero of $S$ and encloses an odd number of them. Then $G_\mu$ has no zero on $\Gamma$ and an odd number of zeros inside $\Gamma$, counted with multiplicity, or there are $z\in\Gamma$ and $\lambda\in(0,1]$ with $S(z)=\lambda\hat\mu(z)$.
+\end{lemma}
+
+\begin{proof}
+For $0\le\lambda\le1$ the function $G_{\lambda\mu}=S-\lambda\hat\mu$ is entire, and $G_{\lambda\mu}(z)$ and $G_{\lambda\mu}'(z)$ depend continuously on $(\lambda,z)$. Suppose that no $G_{\lambda\mu}$ vanishes on $\Gamma$. Then $|G_{\lambda\mu}(z)|$ has a positive lower bound on the compact set $[0,1]\times\Gamma$, so the number of zeros of $G_{\lambda\mu}$ inside $\Gamma$, counted with multiplicity,
+\[
+N(\lambda)=\frac1{2\pi i}\oint_\Gamma\frac{G_{\lambda\mu}'(z)}{G_{\lambda\mu}(z)}\,dz\qquad(\Gamma\text{ oriented counterclockwise}),
+\]
+depends continuously on $\lambda$. As an integer, $N(\lambda)$ is constant. Thus $N(1)=N(0)$, and $N(0)$ is odd because $\Gamma$ encloses an odd number of zeros of $G_0=S$ and they are simple. Otherwise $G_{\lambda\mu}(z)=0$ for some $\lambda\in[0,1]$ and $z\in\Gamma$, and $\lambda>0$ because $S$ has no zero on $\Gamma$.
+\end{proof}
+
+Lemma~\ref{lem:crossing} is a homotopy form of Rouch\'e's theorem. We call a point $z$ as in its second alternative a \emph{crossing} for $\mu$. For $\mu=w$ the first alternative contradicts \eqref{eq:FS}, so $w$ has a crossing on $\Gamma$. The next lemma bounds the real part of $\bar u\hat\mu(z)$ for the measures of the two classes.
+
+\begin{lemma}\label{lem:support}
+Let $\phi\colon[-1/2,1/2]\to\R$ be continuous and $\tau>0$.
+\begin{enumerate}[label=(\alph*)]
+\item\label{sup:one} $\int\phi\,d\mu\le\tau\max(0,\max\phi)$ for every $\mu\in\mathcal A_\tau$.
+\item\label{sup:two} $\int\rho\phi\le\lambda_0\tau+2\int\max(\phi-\lambda_0,0)$ for every $\rho\in\mathcal A^2_\tau$ and every $\lambda_0\ge0$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+Part~\ref{sup:one} holds because $\phi\le\max(0,\max\phi)$ and $\mu$ is nonnegative with mass at most $\tau$. In~\ref{sup:two}, $\int\rho\phi=\lambda_0\int\rho+\int\rho(\phi-\lambda_0)$. Here $\lambda_0\int\rho\le\lambda_0\tau$ because $\lambda_0\ge0$, and $\rho(\phi-\lambda_0)\le\rho\max(\phi-\lambda_0,0)\le2\max(\phi-\lambda_0,0)$.
+\end{proof}
+
+In the one-sided case let $B_\tau(\phi)=\tau\max(0,\max\phi)$. In the two-sided case let $B_\tau(\phi)=\lambda_0\tau+2\int\max(\phi-\lambda_0,0)$, where $\lambda_0\ge0$ is a number that the certificate supplies with $\phi$ (Definition~\ref{def:cert}). By Lemma~\ref{lem:support}, $\int\phi\,d\mu\le B_\tau(\phi)$ for every $\mu$ in the class of the case. If $\re(\bar uS(z))>B_\tau(\phi)$ for $\phi(t)=\re(\bar uK_t(z))$, then the functional $\zeta\mapsto\re(\bar u\zeta)$ separates $S(z)$ from the convex set of all $\hat\mu(z)$ with $\mu$ in the class, and no measure of the class has a crossing at $z$. Where this separation fails, we restrict the values of $\hat\mu$ at finitely many points and use witnesses.
+
+Let $\tau'>0$, $z_c\in\C$, $r\ge0$, let $p_1,\dots,p_k\in\C$ with $k\ge0$, and let $Q_1,\dots,Q_k\subset\C$ be closed rectangles with sides parallel to the axes. Let $\mathcal P=\mathcal P(\tau',z_c,r;p_1,Q_1;\dots;p_k,Q_k)$ be the set of measures $\nu$ in the class of the case, with $\tau'$ in place of $\tau$, for which some $\sigma\ge1$ satisfies $|\hat\nu(z_c)-\sigma S(z_c)|\le r$ and for which $\hat\nu(p_j)\in Q_j$ for $j=1,\dots,k$. We say that $\mathcal P$ pins the values of $\hat\nu$ at $z_c$ and at the points $p_j$. This set is convex: $\nu\mapsto\hat\nu(p)$ is linear, discs and rectangles are convex, and convex combinations of the numbers $\sigma$ preserve the condition at $z_c$.
+
+\begin{lemma}[pinned sets]\label{lem:pinned}
+Let $\mathcal P$ be as above, let $v,y_1,\dots,y_k\in\C$, and let $\Lambda(t)=\re(\bar vK_t(z_c))+\sum_j\re(\bar y_jK_t(p_j))$. In the two-sided case $B_{\tau'}$ may be formed with any $\lambda_0\ge0$.
+\begin{enumerate}[label=(\alph*)]
+\item\label{pin:empty} If $\re(\bar vS(z_c))\ge0$ and
+\begin{equation}\label{eq:empty}
+B_{\tau'}(\Lambda)<\re(\bar vS(z_c))-|v|r+\sum_j\min_{x\in Q_j}\re(\bar y_jx),
+\end{equation}
+then $\mathcal P$ is empty.
+\item\label{pin:tile} Let $p,u\in\C$ and $\phi_p(t)=\re(\bar uK_t(p))-\Lambda(t)$. If $\re(\bar vS(z_c))\le0$ and
+\begin{equation}\label{eq:W1}
+\re(\bar uS(p))-\re(\bar vS(z_c))-|v|r-\sum_j\max_{x\in Q_j}\re(\bar y_jx)>B_{\tau'}(\phi_p),
+\end{equation}
+then $G_\nu(p)\ne0$ for every $\nu\in\mathcal P$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+Let $\nu\in\mathcal P$, with $\sigma$ as in the definition. Then $\re(\bar v\hat\nu(z_c))$ differs from $\sigma\re(\bar vS(z_c))$ by at most $|v|r$, and $\re(\bar y_j\hat\nu(p_j))$ lies between the minimum and the maximum of $\re(\bar y_jx)$ over $x\in Q_j$. Moreover $\int\Lambda\,d\nu=\re(\bar v\hat\nu(z_c))+\sum_j\re(\bar y_j\hat\nu(p_j))$. In~\ref{pin:empty}, $\re(\bar vS(z_c))\ge0$ and $\sigma\ge1$ give
+\[
+\int\Lambda\,d\nu\ge\re(\bar vS(z_c))-|v|r+\sum_j\min_{x\in Q_j}\re(\bar y_jx),
+\]
+which together with \eqref{eq:empty} contradicts Lemma~\ref{lem:support}. In~\ref{pin:tile}, suppose that $G_\nu(p)=0$. Then $\hat\nu(p)=S(p)$, and $\re(\bar vS(z_c))\le0$ and $\sigma\ge1$ give
+\[
+\re(\bar uS(p))=\int\phi_p\,d\nu+\int\Lambda\,d\nu\le B_{\tau'}(\phi_p)+\re(\bar vS(z_c))+|v|r+\sum_j\max_{x\in Q_j}\re(\bar y_jx)
+\]
+by Lemma~\ref{lem:support}. This contradicts \eqref{eq:W1}.
+\end{proof}
+
+\begin{lemma}[witness covers]\label{lem:convex}
+Let $\mu$ be a finite Borel measure on $[-1/2,1/2]$, and let $\mathcal K_1,\dots,\mathcal K_m$ be convex sets of such measures with $\mu\in\mathcal K_1\cup\dots\cup\mathcal K_m$. Suppose that for each $j$ either $\mathcal K_j$ is empty, or there are a piecewise smooth Jordan curve $T_j$ and a measure $\nu_j\in\mathcal K_j$ such that no $G_\nu$ with $\nu\in\mathcal K_j$ vanishes on $T_j$ and $G_{\nu_j}$ has an odd number of zeros inside $T_j$, counted with multiplicity. Then $G_\mu$ has a zero of odd order.
+\end{lemma}
+
+\begin{proof}
+Let $\mu$ lie in $\mathcal K_j$. Then $\mathcal K_j$ is not empty. For $0\le\theta\le1$ the measure $\mu_\theta=(1-\theta)\mu+\theta\nu_j$ lies in $\mathcal K_j$, and $G_{\mu_\theta}=(1-\theta)G_\mu+\theta G_{\nu_j}$. As in the proof of Lemma~\ref{lem:crossing}, the number of zeros of $G_{\mu_\theta}$ inside $T_j$ depends continuously on $\theta$, so it is constant. Hence $G_\mu$ has an odd number of zeros inside $T_j$, and one of them has odd order.
+\end{proof}
+
+\begin{lemma}[localization]\label{lem:local}
+Let $A\subset\C$ be a set with a point $z_c\in A$, and let $U\supseteq A$ be convex. Let $d,Y,L,m_S$ be numbers with $|z-z_c|\le d$ and $|S(z)|\ge m_S>0$ for $z\in A$, and $|\im\zeta|\le Y$ and $|S'(\zeta)|\le L$ for $\zeta\in U$. Put $\sigma_{\max}=\tau e^{\pi Y}/m_S$ and $r_\tau=d(\pi\tau e^{\pi Y}+\sigma_{\max}L)$. If $\mu\in\mathcal A_\tau$, $z\in A$ and $\lambda\in(0,1]$ satisfy $S(z)=\lambda\hat\mu(z)$, then $\sigma=1/\lambda\ge1$ satisfies $|\hat\mu(z_c)-\sigma S(z_c)|\le r_\tau$. Moreover $|\hat\mu(p)|\le\tau e^{\pi|\im p|}$ for every $p\in\C$ and every $\mu\in\mathcal A_\tau$.
+\end{lemma}
+
+\begin{proof}
+We have $\hat\mu(z)=\sigma S(z)$. Since the segment from $z$ to $z_c$ lies in $U$ and $|2\pi tK_t(\zeta)|\le\pi e^{\pi|\im\zeta|}$ for $|t|\le1/2$, we get $|\hat\mu(z)-\hat\mu(z_c)|\le\int|K_t(z)-K_t(z_c)|\,d\mu(t)\le\pi\tau de^{\pi Y}$. Moreover $\sigma=|\hat\mu(z)|/|S(z)|\le\tau e^{\pi|\im z|}/m_S\le\sigma_{\max}$ and $|S(z)-S(z_c)|\le dL$. Hence $|\hat\mu(z_c)-\sigma S(z_c)|\le|\hat\mu(z_c)-\hat\mu(z)|+\sigma|S(z)-S(z_c)|\le r_\tau$. The last claim holds because $|K_t(p)|\le e^{\pi|\im p|}$ for $|t|\le1/2$.
+\end{proof}
+
+\begin{definition}\label{def:cert}
+Let $0<\tau<1$. A \emph{certificate} for $\tau$, in the one-sided or in the two-sided case, consists of the following data.
+\begin{enumerate}[label=(\roman*)]
+\item\label{c:T1} An ellipse $T_1$, parametrized by $z(s)=c+a\cos2\pi s+ib\sin2\pi s$ for $0\le s\le1$ with real $c$ and $a,b>0$, that passes through no zero of $S$ and encloses an odd number of them, and a subdivision of $[0,1]$ into intervals of two types, E and H.
+\item\label{c:E} For each interval of type E, a number $u\in\C$, and in the two-sided case a number $\lambda_0\ge0$ with which $B_\tau$ is formed, such that $\re(\bar uS(z))>B_\tau(\phi)$ for $\phi(t)=\re(\bar uK_t(z))$ at every point $z$ of the arc.
+\item\label{c:H} For each interval $[s_0,s_1]$ of type H: a point $z_c=z(s_c)$ with $s_0\le s_c\le s_1$; numbers $d,Y,L,m_S$ as in Lemma~\ref{lem:local} for the arc $z([s_0,s_1])$ and a convex set containing it, and a number $r\ge r_\tau$; points $p_1,\dots,p_k\in\C$ with $k\ge0$ and numbers $R_j\ge\tau e^{\pi|\im p_j|}$; and finitely many products $Q=Q_1\times\dots\times Q_k$ of closed rectangles with sides parallel to the axes, called \emph{leaves}, whose union contains the product of the squares $\{x\in\C:|\re x|,|\im x|\le R_j\}$. For $k=0$ there is a single leaf. Each leaf carries one of the following.
+\begin{itemize}
+\item An \emph{exclusion}: numbers $v,y_1,\dots,y_k\in\C$, and in the two-sided case $\lambda_0\ge0$, that satisfy $\re(\bar vS(z_c))\ge0$ and \eqref{eq:empty} with $\tau'=\tau$.
+\item A \emph{witness}, which consists of the following.
+\begin{enumerate}[label=(\alph*)]
+\item Numbers $\tau'\ge\tau$ and $r'\ge r_\tau$.
+\item An ellipse $T$, called the tile, parametrized by $p(q)=c_T+a_T\cos2\pi q+ib_T\sin2\pi q$ for $0\le q\le1$ with complex $c_T$ and $a_T,b_T>0$, and a subdivision of $[0,1]$ into intervals that define the tile arcs.
+\item For each tile arc, numbers $u,v,y_1,\dots,y_k\in\C$, and in the two-sided case $\lambda_0\ge0$, that satisfy $\re(\bar vS(z_c))\le0$ and \eqref{eq:W1}, with this $\tau'$ and with $r'$ in place of $r$, at every point $p$ of the tile arc.
+\item A measure $\nu_{\mathrm{rep}}\in\mathcal P(\tau',z_c,r';p_1,Q_1;\dots;p_k,Q_k)$ such that $G_{\nu_{\mathrm{rep}}}$ has no zero on $T$ and an odd number of zeros inside $T$, counted with multiplicity.
+\end{enumerate}
+\end{itemize}
+\end{enumerate}
+\end{definition}
+
+A certificate whose intervals all have type E is a single-contour certificate, and its correctness rests on Lemmas~\ref{lem:crossing} and~\ref{lem:support} alone. We say that the ellipse $T_1$ forms the first level, the intervals of type H with $k=0$ the second level, and those with $k\ge1$ the third level. A certificate without intervals of the third level is a two-level certificate. On an arc of the second level, a crossing confines $\hat\mu(z_c)$ to a disc around a point $\sigma S(z_c)$, and under this constraint $G_\mu$ has an odd number of zeros inside the tile. The certificate of Table~\ref{tab:signed} has no third level in the sense of Definition~\ref{def:cert}: on each of its intervals of type H we have $k=0$, and the single leaf carries a tree of nodes as in Definition~\ref{def:nested} below. Its tiles are the following. Seven are ellipses around the zero~$3$ of $S$; two of them also enclose the zero~$2$, and one also encloses the zero~$4$. A circle of radius $0.45$ around $4.55-0.25i$ encloses no zero of $S$. An ellipse around $4.57+0.157i$ encloses the zeros~$4$ and~$5$, and an ellipse around $6.44-0.05i$ encloses the zero~$6$. Each of these comes with its mirror image. The remaining tile is an ellipse around $6.35$, symmetric about $\R$, that encloses the zeros~$6$ and~$7$.
+The lemmas need no condition on the zeros of $S$ inside a tile. The reflection $t\mapsto-t$ maps each class to itself and replaces $\hat\mu(z)$ by $\overline{\hat\mu(\bar z)}$, so every condition at a point $z$ has a counterpart at $\bar z$; this is why the tiles come in conjugate pairs. The checkers nevertheless do not use this symmetry\QSymTail.
+
+\begin{proposition}[multi-level certificates]\label{prop:multilevel}
+If a certificate for $\tau$ exists, then $G_\mu$ has a zero of odd order for every $\mu$ in the class of the case.
+\end{proposition}
+
+\begin{proof}
+Let $\mu$ be in the class. By Lemma~\ref{lem:crossing} for $\Gamma=T_1$, either $G_\mu$ has an odd number of zeros inside $T_1$, and then one of them has odd order, or $\mu$ has a crossing $z=z(s)$ on $T_1$ with $S(z)=\lambda\hat\mu(z)$ and $\lambda\in(0,1]$. In the second case let $s$ lie in an interval $I$ of the certificate. If $I$ has type E, then $\lambda\mu$ belongs to the class, and $\re(\bar uS(z))=\int\phi\,d(\lambda\mu)\le B_\tau(\phi)$ by Lemma~\ref{lem:support}, which contradicts~\ref{c:E}. So $I$ has type H. By Lemma~\ref{lem:local}, some $\sigma\ge1$ satisfies $|\hat\mu(z_c)-\sigma S(z_c)|\le r_\tau$, and $|\re\hat\mu(p_j)|,|\im\hat\mu(p_j)|\le R_j$ for every $j$. So $\mu$ belongs to $\mathcal P(\tau,z_c,r_\tau;p_1,Q_1;\dots;p_k,Q_k)$ for some leaf $Q$. For a leaf with an exclusion let $\mathcal K_Q=\mathcal P(\tau,z_c,r;p_1,Q_1;\dots;p_k,Q_k)$. It contains the former set because $r\ge r_\tau$, and it is empty by Lemma~\ref{lem:pinned}\ref{pin:empty}. For a leaf with a witness let $\mathcal K_Q=\mathcal P(\tau',z_c,r';p_1,Q_1;\dots;p_k,Q_k)$. It contains the former set because $\tau'\ge\tau$ and $r'\ge r_\tau$, it contains $\nu_{\mathrm{rep}}$, and by Lemma~\ref{lem:pinned}\ref{pin:tile} no $G_\nu$ with $\nu\in\mathcal K_Q$ vanishes on the tile. Lemma~\ref{lem:convex} with the sets $\mathcal K_Q$ gives the claim.
+\end{proof}
+
+\begin{corollary}\label{cor:cert}
+Let $f$ be as in Theorem~\ref{thm:signed}. If a certificate for $\tau$ exists in the one-sided case, then $\esssup(f*f)>(\int f)^2/(1-\tau)$. If one exists in the two-sided case, then $\esssup|f*f|>(\int f)^2/(1-\tau)$.
+\end{corollary}
+
+\begin{proof}
+We may assume $\int f=1$ and $M<\infty$, as at the beginning of this section. If $1-1/M\le\tau$, then $w$ belongs to the class of its case, and $G_w$ has a zero of odd order by Proposition~\ref{prop:multilevel}. This contradicts \eqref{eq:FS}. Hence $1-1/M>\tau$, that is, $M>1/(1-\tau)$.
+\end{proof}
+
+\subsection*{Nested certificates}
+The certificate behind the bound $\tfrac43$ needs one more step. At a witness, separation may fail on part of the tile. A measure of the leaf's set then has a crossing of a second kind on the tile, and this crossing confines the measure further, so that a failing arc can be treated in the same way as a leaf.
+
+\begin{lemma}[crossings at a base measure]\label{lem:basecross}
+Let $T$ be a piecewise smooth Jordan curve, and let $\nu_0$ and $\mu$ be finite Borel measures on $[-1/2,1/2]$. Suppose that $G_{\nu_0}$ has no zero on $T$ and an odd number of zeros inside $T$, counted with multiplicity, and that every zero of $G_\mu$ has even order. Then there are $z\in T$ and $\kappa\ge0$ with $\hat\mu(z)=S(z)+\kappa G_{\nu_0}(z)$.
+\end{lemma}
+
+\begin{proof}
+For $0\le\theta\le1$ let $\mu_\theta=(1-\theta)\nu_0+\theta\mu$, so that $G_{\mu_\theta}=(1-\theta)G_{\nu_0}+\theta G_\mu$. If $G_\mu$ vanishes at a point of $T$, take $\kappa=0$. Otherwise $G_\mu$ is not identically zero, and it has an even number of zeros inside $T$. If no $G_{\mu_\theta}$ vanished on $T$, then, as in the proof of Lemma~\ref{lem:crossing}, the number of zeros of $G_{\mu_\theta}$ inside $T$ would not depend on $\theta$; but it is odd for $\theta=0$ and even for $\theta=1$. Hence $G_{\mu_\theta}(z)=0$ for some $\theta\in[0,1]$ and $z\in T$, and $\theta>0$ because $G_{\nu_0}$ has no zero on $T$. Dividing $(1-\theta)G_{\nu_0}(z)+\theta G_\mu(z)=0$ by $\theta$ gives the claim with $\kappa=(1-\theta)/\theta$.
+\end{proof}
+
+Fix $\varepsilon\ge0$. Let $A=p([q_0,q_1])$ be an arc of a tile $T$ with parametrization $p(q)$, and let $\nu_0$ be a finite Borel measure on $[-1/2,1/2]$. A measure $\mu$ satisfies the \emph{tube condition} $(A,\nu_0)$ if there are $z\in A$ and $\kappa\ge0$ with $|\hat\mu(z)-S(z)-\kappa G_{\nu_0}(z)|\le\varepsilon$. A \emph{node} $N$ below an interval of type H consists of numbers $\tau_N\ge\tau$ and $r_N\ge r_\tau$, where $r_\tau$ is formed with some numbers $d,Y,L,m_S$ as in Lemma~\ref{lem:local} for the arc of $T_1$ and a convex set containing it, a product $Q_1\times\dots\times Q_k$ of closed rectangles and finitely many tube conditions $(A_1,\nu_1),\dots,(A_m,\nu_m)$. In the one-sided case let $E_N$ be the set of measures in $\mathcal P(\tau_N,z_c,r_N;p_1,Q_1;\dots;p_k,Q_k)$ that satisfy these tube conditions. This set need not be convex, and we write $\operatorname{conv}E_N$ for its convex hull.
+
+\begin{lemma}[tubes]\label{lem:tubes}
+Let $N$ be a node in the one-sided case, let $(A_l,\nu_l)$ for $l=1,\dots,m$ be its tube conditions, and let $v,y_1,\dots,y_k,v_1,\dots,v_m\in\C$.
+\begin{enumerate}[label=(\alph*)]
+\item\label{tube:empty} Suppose that $\re(\bar vS(z_c))\ge0$, that $\re(\bar v_lG_{\nu_l}(\zeta))\ge0$ for $\zeta\in A_l$ and every $l$, and that
+\[
+B_{\tau_N}(\Lambda)<\re(\bar vS(z_c))-|v|r_N+\sum_j\min_{x\in Q_j}\re(\bar y_jx)+\sum_l\Bigl(\min_{\zeta\in A_l}\re(\bar v_lS(\zeta))-|v_l|\varepsilon\Bigr)
+\]
+for $\Lambda(t)=\re(\bar vK_t(z_c))+\sum_j\re(\bar y_jK_t(p_j))+\sum_l\max_{\zeta\in A_l}\re(\bar v_lK_t(\zeta))$. Then $E_N$ is empty.
+\item\label{tube:sep} Let $p,u\in\C$. Suppose that $\re(\bar vS(z_c))\le0$, that $\re(\bar v_lG_{\nu_l}(\zeta))\le0$ for $\zeta\in A_l$ and every $l$, and that
+\[
+\re(\bar uS(p))-\re(\bar vS(z_c))-|v|r_N-\sum_j\max_{x\in Q_j}\re(\bar y_jx)-\sum_l\Bigl(\max_{\zeta\in A_l}\re(\bar v_lS(\zeta))+|v_l|\varepsilon\Bigr)>B_{\tau_N}(\Phi)
+\]
+for $\Phi(t)=\re(\bar uK_t(p))-\re(\bar vK_t(z_c))-\sum_j\re(\bar y_jK_t(p_j))+\sum_l\max_{\zeta\in A_l}\bigl(-\re(\bar v_lK_t(\zeta))\bigr)$. Then $G_\nu(p)\ne0$ for every $\nu\in\operatorname{conv}E_N$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+The arcs $A_l$ are compact, so these extrema exist, and $\Lambda$ and $\Phi$ are continuous. Let $\mu\in E_N$, with $\sigma$ as in the definition of $\mathcal P$, and with points $z_l\in A_l$ and numbers $\kappa_l\ge0$ for its tube conditions. Then $\re(\bar v_l\hat\mu(z_l))$ differs from $\re(\bar v_lS(z_l))+\kappa_l\re(\bar v_lG_{\nu_l}(z_l))$ by at most $|v_l|\varepsilon$. In~\ref{tube:empty} let $\lambda(t)=\re(\bar vK_t(z_c))+\sum_j\re(\bar y_jK_t(p_j))+\sum_l\re(\bar v_lK_t(z_l))$. As in the proof of Lemma~\ref{lem:pinned}, the sign conditions give
+\[
+\int\lambda\,d\mu\ge\re(\bar vS(z_c))-|v|r_N+\sum_j\min_{x\in Q_j}\re(\bar y_jx)+\sum_l\Bigl(\min_{\zeta\in A_l}\re(\bar v_lS(\zeta))-|v_l|\varepsilon\Bigr),
+\]
+while $\int\lambda\,d\mu\le B_{\tau_N}(\lambda)\le B_{\tau_N}(\Lambda)$ by Lemma~\ref{lem:support}, because $z_l\in A_l$ gives $\lambda\le\Lambda$. This contradicts the hypothesis, so $E_N$ is empty. In~\ref{tube:sep} let $\phi(t)=\re(\bar uK_t(p))-\re(\bar vK_t(z_c))-\sum_j\re(\bar y_jK_t(p_j))-\sum_l\re(\bar v_lK_t(z_l))$. Then $\phi\le\Phi$, and the sign conditions give
+\[
+\re(\bar u\hat\mu(p))=\int\phi\,d\mu+\re(\bar v\hat\mu(z_c))+\sum_j\re(\bar y_j\hat\mu(p_j))+\sum_l\re(\bar v_l\hat\mu(z_l))\le\beta,
+\]
+where $\beta=B_{\tau_N}(\Phi)+\re(\bar vS(z_c))+|v|r_N+\sum_j\max_{x\in Q_j}\re(\bar y_jx)+\sum_l(\max_{\zeta\in A_l}\re(\bar v_lS(\zeta))+|v_l|\varepsilon)$. The number $\beta$ does not depend on $\mu$, and $\nu\mapsto\re(\bar u\hat\nu(p))$ is linear, so $\re(\bar u\hat\nu(p))\le\beta$ for every $\nu\in\operatorname{conv}E_N$. If $G_\nu(p)=0$, then $\re(\bar uS(p))=\re(\bar u\hat\nu(p))\le\beta$, which contradicts the hypothesis.
+\end{proof}
+
+\begin{definition}\label{def:nested}
+A \emph{nested certificate} for $\tau$ in the one-sided case consists of the data of Definition~\ref{def:cert}, except that each leaf $Q$ of an interval of type H carries a finite tree of nodes in place of an exclusion or a witness. The root of the tree has the rectangles of $Q$ and no tube conditions. Each node $N$ has one of the following kinds.
+\begin{itemize}
+\item \emph{Empty}: numbers as in Lemma~\ref{lem:tubes}\ref{tube:empty}.
+\item \emph{Split}: an index $j$; the four children of $N$ arise from dividing $Q_j$ into four equal rectangles.
+\item \emph{Arc split}: an index $l$ and a number $q_m$ with $q_0<q_m<q_1$, where $A_l=p([q_0,q_1])$ and $p$ is the parametrization of the tile of $A_l$; in the two children of $N$ the arc $A_l$ is replaced by $p([q_0,q_m])$ and by $p([q_m,q_1])$.
+\item \emph{Witness}: a tile $T$ as in Definition~\ref{def:cert}, a measure $\nu\in E_N$ such that $G_\nu$ has no zero on $T$ and an odd number of zeros inside $T$, counted with multiplicity, and a subdivision of the parameter interval of $T$ into tile arcs. Each tile arc $A$ carries either numbers as in Lemma~\ref{lem:tubes}\ref{tube:sep} for every point $p$ of $A$, or a child $N'$ whose tube conditions are those of $N$ together with $(A,\nu)$.
+\end{itemize}
+Each node has its own numbers $\tau_N$ and $r_N$, and except where stated, a child has the rectangles and the tube conditions of its parent. An exclusion of Definition~\ref{def:cert} is an empty node without tube conditions, and a witness there is a witness node all of whose tile arcs carry separations.
+\end{definition}
+
+\begin{proposition}[nested certificates]\label{prop:nested}
+If a nested certificate for $\tau$ exists in the one-sided case, then $G_\mu$ has a zero of odd order for every $\mu\in\mathcal A_\tau$.
+\end{proposition}
+
+\begin{proof}
+Suppose that every zero of $G_\mu$ has even order for some $\mu\in\mathcal A_\tau$. As in the proof of Proposition~\ref{prop:multilevel}, $\mu$ has a crossing $z(s)$ with $S(z(s))=\lambda\hat\mu(z(s))$ and $\lambda\in(0,1]$, where $s$ lies in an interval of type H, and $\hat\mu(p_j)\in Q_j$ for every $j$, for some leaf $Q$ of this interval. Every node $N$ below this interval has $\tau_N\ge\tau$ and $r_N\ge r_\tau$, so $\mu\in\mathcal A_{\tau_N}$, and by Lemma~\ref{lem:local} the number $\sigma=1/\lambda$ satisfies $|\hat\mu(z_c)-\sigma S(z_c)|\le r_N$. Hence $\mu\in E_N$ whenever $\mu$ satisfies the rectangles and the tube conditions of $N$, in particular for the root $N$ of the tree of $Q$. We show that $\mu\in E_N$ implies $\mu\in E_{N'}$ for some child $N'$ of $N$. As the tree is finite, this is a contradiction. An empty node has $E_N=\varnothing$ by Lemma~\ref{lem:tubes}\ref{tube:empty}. At a split, $\hat\mu(p_j)$ lies in one of the four rectangles. At an arc split, a point $z_l\in A_l$ as in the tube condition $(A_l,\nu_l)$ for $\mu$ lies in one of the two halves of $A_l$. At a witness, Lemma~\ref{lem:basecross} with $\nu_0=\nu$ gives $z\in T$ and $\kappa\ge0$ with $\hat\mu(z)=S(z)+\kappa G_\nu(z)$. Then $G_{\mu_\theta}(z)=0$ for $\mu_\theta=(1-\theta)\nu+\theta\mu$ and $\theta=1/(1+\kappa)$, and $\mu_\theta\in\operatorname{conv}E_N$. By Lemma~\ref{lem:tubes}\ref{tube:sep}, $z$ lies on no tile arc with a separation. So $z$ lies on a tile arc $A$ with a child $N'$, and $\mu$ satisfies the tube condition $(A,\nu)$ with this $z$ and $\kappa$, even with $\hat\mu(z)-S(z)-\kappa G_\nu(z)=0$. As $\mu$ also satisfies the rectangles and the tube conditions of $N$, we get $\mu\in E_{N'}$.
+\end{proof}
+
+Here the induction runs over $E_N$ and not over $\operatorname{conv}E_N$: a measure in $\operatorname{conv}E_N$ that satisfies a new tube condition need not lie in the convex hull of the measures of $E_N$ that satisfy it.
+
+\begin{corollary}\label{cor:nested}
+Let $f$ be as in Theorem~\ref{thm:signed}. If a nested certificate for $\tau$ exists in the one-sided case, then $\esssup(f*f)>(\int f)^2/(1-\tau)$.
+\end{corollary}
+
+\begin{proof}
+As for Corollary~\ref{cor:cert}, with Proposition~\ref{prop:nested} in place of Proposition~\ref{prop:multilevel}.
+\end{proof}
+
+The proof of Theorem~\ref{thm:signed} below uses only the one-sided case. The two-sided case enters only the limits at the end of this section.
+
+\begin{proof}[Proof of Theorem~\ref{thm:signed}]
+The certificate in Table~\ref{tab:signed} uses for $T_1$ the circle with $c=21/20$ and $a=b=3/5$. Its interior meets $\R$ in the interval $(c-a,c+a)=(0.45,1.65)$. All zeros of $S$ are real, so $T_1$ encloses exactly one of them, the zero~$1$, and passes through none. Its intervals of type H have no pinned points. It is a nested certificate for $\tau=\TauThrP$ in the one-sided case, with $\varepsilon=\QEps$ in the tube conditions. \QCheckSentence{} Since $1/(1-\TauThrP)=\CthrPFrac$, Corollary~\ref{cor:nested} gives $\esssup(f*f)>\CthrPFrac(\int f)^2$, and $\esssup|f*f|\ge\esssup(f*f)$. If $\int f=0$, the right sides of the inequalities in \eqref{eq:signed} vanish, and the left sides are nonnegative because $\esssup(f*f)\ge\int_{-1/2}^{1/2}f*f=0$. Hence $C_3\ge C_3'\ge\CthrPFrac$.
+\end{proof}
+
+\begin{table}[ht]
+\centering
+\caption{The nested certificate of Theorem~\ref{thm:signed} and its checks (one-sided case).}\label{tab:signed}
+\small
+\begin{tabular}{@{}lp{0.5\textwidth}@{}}
+\toprule
+Threshold $\tau$; $\varepsilon$ & $\TauThrP$; $\QEps$\\
+Intervals of type E; of type H (records of type N) & $\QTabE$; $\QTabH$\\
+Nodes: empty; arc split; witness & \QTabNodes\\
+Tile arcs: in total; with a child & $\QTabTArcs$; $\QTabHard$\\
+Tube conditions at a node; arc splits in a row & at most $\QTabTubes$; at most $\QTabChain$\\
+$\tau_N$ of the empty nodes and witnesses & $\tau$, except at $\QTabTauN$ of them (at most $\QTabTauMax$)\\
+Archive of the $2{,}048$ parts & \texttt{\QTabFile}, $\QTabSize$ bytes\\
+Wall-clock time, \texttt{check\_nested.py} & \QTabTimeOne{} on two servers with $384$ threads and four with $96$ threads\\
+Wall-clock time, \texttt{indep\_nested.py} ($\QIndepM$ parts) & \QTabTimeTwo\\
+\midrule
+\multicolumn{2}{@{}l}{SHA-256\quad\texttt{\scriptsize \QTabSha}}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection*{Certificates and checks}
+A certificate is a JSON file. It contains $\tau$, the parameters $c,a,b$ of $T_1$, the tiles by their centres and semi-axes, and the intervals of $[0,1]$ with their types, all as rational numbers. An interval of type E carries the real and imaginary parts of $u$. An interval of type H of the second level carries $s_c$ and a witness without numbers $y_j$ and without a stored $\tau'$, which is $\tau$. One of the third level carries $s_c$, its two pinned points $p_1,p_2$ with the numbers $R_1,R_2$, and a tree of leaves, obtained from the squares $\{x:|\re x|,|\im x|\le R_j\}$ by repeatedly dividing one of the current squares into four equal squares. A leaf carries its squares $Q_j$ and either an exclusion, given by $v$ and the numbers $y_j$, or a witness. A witness consists of $\tau'$, the name of its tile, $\nu_{\mathrm{rep}}$, a number $\sigma_{\mathrm{rep}}$ and the tile arcs. The number $\sigma_{\mathrm{rep}}$ plays the role of $\sigma$ in the definition of $\mathcal P$ for $\nu_{\mathrm{rep}}$, and each tile arc is given by an interval of the parameter $q$ of the tile and by $u$, $v$ and the numbers $y_j$. The measures $\nu_{\mathrm{rep}}$ are sums of point masses. The repository specifies the format in full (Appendix~\ref{app:files}). In a nested certificate an interval of type H is stored as a record of type N, which carries the record of its tree. A node record is an empty node, with $v$, the numbers $y_j$ and one number $v_l$ for each tube condition; a split, with the index $j$; an arc split, with the index $l$ of a tube condition and the number $q_m$; or a witness, with the data of a witness above, whose tile arcs carry either the numbers $u$, $v$, $y_j$ and $v_l$ or the record of a child, which names the kind of its new tube condition. For each tube condition $(A_l,\nu_l)$ a witness also lists a point $q_r$ of the parameter interval of $A_l$ and a number $\kappa_r\ge0$, and the checkers prove $|\hat\nu(p(q_r))-S(p(q_r))-\kappa_rG_{\nu_l}(p(q_r))|\le\varepsilon$ for its measure~$\nu$. Empty nodes and witnesses may store $\tau_N$, which is $\tau$ otherwise, and the header holds $\varepsilon$.
+
+Certificates in the sense of Definition~\ref{def:cert}, such as the certificate for $\tau=6/25$ that the Lean proofs below read, are checked by two programs. Both checkers read all numbers exactly. They confirm that the intervals of $T_1$ and the arcs of each tile subdivide the respective parameter interval $[0,1]$, that $(c-a,c+a)$ contains exactly one nonzero integer, that $c\pm a$ is not a nonzero integer and that $R_j\ge\tau e^{\pi|\im p_j|}$ for every pinned point $p_j$. To establish that the leaves cover the product of the two squares, the first checker compares each leaf with its position in the tree, and the second checks that the leaves lie in it, have pairwise disjoint interiors and have total volume $\prod_j(2R_j)^2$. Each checker also verifies $\tau'\ge\tau$ and computes bounds $r\ge r_\tau$ for each interval of type H, together with the numbers $d,Y,L,m_S$, rather than reading them from the file. For a witness, $r'$ is computed in the same way with $\tau'$ in place of $\tau$, that is, $r'=r_{\tau'}$ rounded up (for the second checker, the larger of its two values), so that $r'\ge r_\tau$. Both checkers bound $|S'|$ locally on each arc. With a bound for $|S'|$ on a whole horizontal strip, the value of $r$ in the first checker would be up to about $\StripRatio$ times larger, and at least twice as large on $\StripTwice$ of the $\StripH$ intervals of type~H. In a floating-point evaluation $\StripFail$ of the $\TabLeafE$ exclusions of the certificate for $\tau=6/25$ would then fail. With the local bounds, the smallest slack of an exclusion in this evaluation is about $\StripSlack$. For each witness the checkers verify in exact arithmetic that $\nu_{\mathrm{rep}}$ has nonnegative masses at points of $[-1/2,1/2]$ with total mass at most $\tau'$ and that $\sigma_{\mathrm{rep}}\ge1$, and they prove the inequality $|\hat\nu_{\mathrm{rep}}(z_c)-\sigma_{\mathrm{rep}}S(z_c)|\le r'$ and the conditions $\hat\nu_{\mathrm{rep}}(p_j)\in Q_j$ with enclosures. The zeros of $G_{\nu_{\mathrm{rep}}}$ inside the tile are counted by the argument principle. The checkers divide the tile into pieces on which the values of $G_{\nu_{\mathrm{rep}}}$ provably lie in a disc whose radius is less than half the distance from its centre to $0$, and they add the changes of the argument over the pieces and require the sum to be within $\pi/2$ of an odd multiple of $2\pi$.
+
+The first checker uses the ball arithmetic of Arb \cite{Joh17} through python-flint \cite{pyflint}, with a precision of $80$ bits. It encloses the points of an arc of $T_1$ in a complex ball, takes this ball as the convex set of Lemma~\ref{lem:local}, and bounds $|S'|$ from above and $|S|$ from below on it by ball evaluation. It proves the inequalities of~\ref{c:E}, \eqref{eq:empty} and \eqref{eq:W1} on balls for the points of the arcs and on subintervals for $t$, which it bisects when necessary within fixed limits. The second checker also uses Arb, with a precision of $100$ bits, but a different enclosure method. It encloses each arc in a disc around the value at its midpoint and bounds functions on the disc by the value at the centre and a Lipschitz bound. For instance, it bounds $|S'|$ on a disc $D(p_m,\delta)$ by $|S'(p_m)|+\delta(\pi^2/3)e^{\pi Y}$ with $Y=|\im p_m|+\delta$, which follows from $|S''(\zeta)|\le(\pi^2/3)e^{\pi|\im\zeta|}$. In $t$ it uses second-order bounds on adaptive cells. For the radius $r$ it computes the bound of Lemma~\ref{lem:local} twice, once with the disc $D(z_c,d)$ and once, as the first checker does, with a ball containing the arc, and it uses the larger value. Definition~\ref{def:cert} admits any $r\ge r_\tau$, so this choice is sound. The larger value makes the conditions on the exclusions and on the tile arcs harder and the condition $|\hat\nu_{\mathrm{rep}}(z_c)-\sigma_{\mathrm{rep}}S(z_c)|\le r'$ easier. In the certificate for $\tau=6/25$ the disc-based value would have sufficed for every witness. What the checkers share with each other and with the search programs is stated in Appendix~\ref{app:files}. Both rely on FLINT through python-flint and on the exact rational arithmetic of Python.
+
+The search programs choose the numbers $u$, $v$ and $y_j$ from linear programs on grids of values of $t$, solved in floating point with HiGHS \cite{HiGHS}. They subdivide intervals, squares and tile arcs until a ball-arithmetic check of the same kind as in the first checker succeeds, and they take $\nu_{\mathrm{rep}}$ from a linear program as well.
+
+Two further programs check the nested certificate of Table~\ref{tab:signed}. It is archived in $2{,}048$ parts, files of the same format with the same header that together hold its $2{,}458$ intervals, and the checkers run on each part separately. One of them, \texttt{check\_nested.py}, checked all $2{,}048$ parts and accepted every interval of each. The other, \texttt{indep\_nested.py}, checked a random sample of $\QIndepM$ parts, drawn by a pseudorandom generator from a seed string fixed in advance, and accepted every interval of these parts; the seed, the generator call and the list of these parts are in \texttt{signed/nested/INDEP\_SAMPLE.txt}. A third program, \texttt{coverage\_subsets2.py}, checks the SHA-256 hash of every part against a list of the hashes and confirms that the parts have the same header and that their intervals subdivide~$[0,1]$.
+
+The program \texttt{check\_nested.py} extends the first checker above to trees of nodes, with the same ball arithmetic at $80$ bits, and it checks the intervals of type E as that checker does. At each empty node and each witness it computes $r_N$ from $\tau_N$ as it computes $r'$ above and checks the sign conditions and the inequalities of Lemma~\ref{lem:tubes}. There it bounds the functions of $t$ by second-order Taylor bounds on dyadic cells of $[-1/2,1/2]$, down to length $2^{-22}$, it encloses each term with an arc $A_l$ on four balls that cover $A_l$, and it bounds the extrema over $A_l$ of the terms with $S$ and $G_{\nu_l}$ on $8$ or $64$ such balls. It checks that the measure of each witness lies in $E_N$, using the points $q_r$ and the numbers $\kappa_r$ of the certificate, and it counts the zeros inside the tiles as above. It accepts the record of a child only if the record names the tube condition of Definition~\ref{def:nested} as its kind.
+
+The program \texttt{indep\_nested.py} was written separately, after reading the code of an earlier version of \texttt{check\_nested.py}; Appendix~\ref{app:files} lists what the two share. It uses ball arithmetic with $128$ bits, bounds the extrema over the arcs $A_l$ by second-order Taylor bounds in the parameter of the arc and the functions of $t$ by mean-value bounds on dyadic cells down to length $2^{-34}$, and it accepts the records of children under the same rule. For $r_N$ it takes the smaller of two bounds of Lemma~\ref{lem:local}, one with a disc around $z_c$ and one with a box containing the arc of $T_1$, and at a witness it takes $|\hat\nu(z_c)-\sigma S(z_c)|$, for the number $\sigma$ of the witness, if this is larger; Definition~\ref{def:nested} admits any $r_N\ge r_\tau$.
+
+The nested certificate was produced by a further search program, which builds the trees: where a witness fails on a tile arc, it tries a child with the new tube condition, with at most two tube conditions at a node, and where a child fails, it may split the arc of a tube condition in two, at most $8$ times in a row. The search ran in pieces, each with a budget of $20{,}000$ nodes, and pieces that exceeded it were divided into $16$ smaller pieces, in up to two rounds. The intervals of the lower half are the mirror images of those of the upper half, and an assembly program joins the pieces into the certificate and writes its parts.
+
+\subsection*{Formal proofs}
+The weaker bound $C_3\ge C_3'\ge\LeanSigSlash$ is verified in Lean~4 with Mathlib. It rests on a certificate for $\tau=6/25$ in the sense of Definition~\ref{def:cert}, with the same circle $T_1$ and with $\TabE$ intervals of type E, $\TabH$ of the second level and $\TabHthree$ of the third level, which pin the values of $\hat\mu$ at $\PinPoint$ and $\PinPointTwo$ or at their mirror images. Both checkers of certificates in the sense of Definition~\ref{def:cert} accept it (Appendix~\ref{app:files}); its file \texttt{\TabFile} has the SHA-256 hash \texttt{\scriptsize \TabSha}. The formalization of the argument for certificates in the sense of Definition~\ref{def:cert} counts zeros by winding numbers and uses neither the argument principle nor the Jordan curve theorem. A checker written in Lean re-derives the conditions of Definition~\ref{def:cert} from the definitions and is proved sound. As for $C_1$, the exporter that translates a certificate into Lean source need not be trusted, because no formal theorem refers to the certificate. The formal theorems state that for every $f$ as in Theorem~\ref{thm:signed} each real number $M$ with $f*f\le M$ almost everywhere satisfies $M>\LeanSigFrac(\int f)^2$, the same inequality for the essential supremum in the extended reals together with $\esssup f*f\le\esssup|f*f|$, and $C_3\ge C_3'\ge\LeanSigSlash$. The $\LeanSChecks$ finite certificate checks are evaluated by \texttt{native\_decide}, one for each of the $\LeanSInt$ intervals of $T_1$ in this certificate and one for the global checks, and the theorems depend on Lean's three standard axioms and on one auxiliary axiom per check. A rebuild from scratch, with the data regenerated from the certificate, re-checked every module in Lean's kernel. With the auxiliary axioms taken as given, the exported proof is accepted by Lean's kernel (\texttt{leanchecker}) and by two other kernel implementations, nanoda and lean4lean, and a corrupted export is rejected by all three. The precision of the interval enclosures of the Lean checker is part of the generated data, $80$ bits for this certificate and $64$ bits for the certificate with $\tau=7/30$ below, and the soundness proof holds for every precision.
+
+A second proof of the same statements uses Lean's kernel alone. A version of the checker written for evaluation by the kernel, which is proved to compute the same results as the checker above on every input, checks the certificate in $\LeanKMods$ generated modules by \texttt{decide +kernel}: the check of each interval of type H is split into piece theorems small enough for the kernel, and further modules assemble them. The three theorems of this proof depend only on Lean's three standard axioms. For this proof a re-check covered only a sample: a seeded random 10\% of the piece modules was checked again by Lean's kernel, while the other piece modules, and the check that the three final theorems depend only on the standard axioms, rest on our own build.
+
+A certificate of the same kind with $\tau=7/30$, in which $T_1$ is the ellipse with $c=53/50$, $a=39/100$ and $b=21/50$, has $2{,}626$ intervals and gives the weaker bound $30/23$. Both versions of the checker accept it, and the formal theorems are those above with $30/23$ in place of $\LeanSigSlash$. Here the $2{,}627$ checks by \texttt{native\_decide} carry one auxiliary axiom each, and this exported proof, too, is accepted by \texttt{leanchecker}, nanoda and lean4lean. The kernel-only proof of this bound uses $15{,}663$ generated modules, which were rebuilt from regenerated sources on other machines. Besides Lean's kernel, nanoda and lean4lean accepted the soundness proof, the lemmas that equate the two versions of the checker, the global checks and one interval of type E, and nanoda also accepted an interval of type H, whose check is assembled from piece theorems. The complete export, about $5.7$ million constants, was not checked by a second kernel. Table~\ref{tab:lean} lists the generated modules and the build times of the four proofs.
+
+\begin{table}[ht]
+\centering
+\caption{Lean proofs of the signed bounds: generated modules and build times.}\label{tab:lean}
+\small
+\begin{tabular}{@{}lllp{0.42\textwidth}@{}}
+\toprule
+Bound & Checks by & Modules & Build\\
+\midrule
+$\LeanSigSlash$ & \texttt{native\_decide} & $\LeanSChecks$ & about $\LeanSCPU$ CPU-hours ($\LeanSWall$ min on one server)\\
+$\LeanSigSlash$ & \texttt{decide +kernel} & $\LeanKMods$ & about $\LeanKCPU$ CPU-hours ($\LeanKWall$ h on $\LeanKServers$ servers with $\LeanKThreads$ threads each)\\
+$30/23$ & \texttt{native\_decide} & $2{,}627$ & about $133$ CPU-hours ($77$ min on two servers with $140$ threads in total)\\
+$30/23$ & \texttt{decide +kernel} & $15{,}663$ & about $11{,}300$ CPU-hours ($6.4$ h on $24$ servers with $96$ threads each)\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection*{Limits of the method}
+The following limits are numerical observations, not proved statements. For single-contour certificates, whatever the contour, the largest admissible $\tau$ appears to be about $0.16557$ in the one-sided case and about $0.1694$ in the two-sided case, which corresponds to about $1.1984$ for $C_3'$ and $1.2039$ for $C_3$. For two-level certificates with the ellipse $T_1$ of the certificate with $\tau=7/30$ and, as tiles, one axis-parallel ellipse around the zero~$3$ together with its mirror image, the corresponding values appear to be about $\CapTwoP$ for $C_3'$ and $\CapTwo$ for $C_3$. For a third level with pinned points near $\PinPoint$ and $\PinPointTwo$, the value for $C_3'$ appears to be at most about $\CapThree$ with that ellipse and at most about $\CapThreeCirc$ with the circle $T_1$ of Table~\ref{tab:signed}. With the circle $T_1$ of Table~\ref{tab:signed}, trees of nodes as in Definition~\ref{def:nested} go past these values and give the bound of that table.
+
+\appendix
+\section{Files and runs}\label{app:files}
+
+This appendix lists the program files of Sections~\ref{sec:computation} to~\ref{sec:signed} and what the checkers share, and the runs behind Sections~\ref{sec:computation} to~\ref{sec:signed}.
+
+\subsection*{Programs} The first checker for Theorem~\ref{thm:Vn} is the program \texttt{verify\_tree.py} of the repository. It imports nothing from the search program, but the two share the constraint definitions of our checker for certificates without square constraints (Section~\ref{sec:remarks}), which the search uses for its linear programs and the first checker extends. The second checker is the program \texttt{iv\_verify.py} of the repository with two modules; an earlier version of it, which did not read compressed dual vectors, checked the certificate for $V_{36}\ge133/100$. Both checkers use HiGHS through highspy~1.15.1.
+
+The two checkers of certificates in the sense of Definition~\ref{def:cert}, \texttt{check\_three\_level.py} and \SecondCheckerName, are in the directory \texttt{signed/checker} of the repository, and \texttt{signed/FORMAT.md} specifies the format. Neither imports anything from the search programs, whose method the first checker follows. The two checkers of the nested certificate of Theorem~\ref{thm:signed}, \texttt{check\_nested.py} and \texttt{indep\_nested.py}, are in the directory \texttt{signed/nested}, together with the program \texttt{coverage\_subsets2.py} of Section~\ref{sec:signed}, the list of the parts checked by \texttt{indep\_nested.py}, with the seed and the rule that drew them (\texttt{INDEP\_SAMPLE.txt}), the programs that produced the certificate and a description of its format. The program \texttt{check\_nested.py} extends \texttt{check\_three\_level.py} and uses its enclosures, its bound for $r$ and its winding count. It imports nothing from these programs, but the search program imports it and applies its checks to each node before writing the node.{} Table~\ref{tab:shared} says what each second checker shares with the first.
+
+\begin{table}[ht]
+\centering
+\caption{What each second checker shares with the first checker of the same certificates.}\label{tab:shared}
+\small
+\begin{tabular}{@{}p{0.25\textwidth}p{0.36\textwidth}p{0.31\textwidth}@{}}
+\toprule
+Second checker & Shared with the first checker & Its own\\
+\midrule
+\texttt{iv\_verify.py} & no code with the first checker or with the search, although we knew the code of the first checker & all of its code\\
+\SecondCheckerName & the reading of the file, the walk over the tree of leaves, the corner rule for the extremes of $\re(\bar y_jx)$ over a box and the outline of the winding count, with about fifty short lines in common; it re-implements the ball-based bound for $r$ of the first checker & its enclosures of arcs and tiles, its bounds in $t$, its coverage test for the leaves and its acceptance test for the pieces of the winding count\\
+\texttt{indep\_nested.py} & nothing imported; $36$ lines of at least $25$ characters in common, $23$ of them verbatim and the others up to the names of variables (the description of the format lists what these lines do); the way it schedules the subtrees of a witness as separate jobs follows the design of \texttt{check\_nested.py} & its checks of the inequalities: its enclosures of $S$, $S'$, $S''$, $K_t$, $\hat\nu$ and $G_\nu$, its bounds for the extrema over arcs and in $t$, its bound for $r_N$, the rest of its winding count, its bounds for the tube conditions and for the rectangles, and its test of the intervals of type E\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection*{Runs}
+\begin{itemize}
+\item \emph{First checker, search logs.} On the logs the first checker evaluates each stored dual vector exactly, after completing its remaining entries as for the compressed certificates of Section~\ref{sec:remarks}. It rejects the certificate if one of them falls short of $\lambda$, and it searches for its own vector only at the other leaves. It accepted all $\Nleaves$ leaves in about $13{,}700$ worker-hours, with smallest bound $1.33500000012\ldots$.
+\item \emph{First checker, archived certificate.} On the same servers the first checker found its own dual vector at every leaf except the two recorded with data. It took about $320{,}000$ worker-hours, accepted all leaves and found the smallest bound $\MinLeaf$.
+\item \emph{Second checker.} We ran it on the search logs, and a separate script combined the per-server results, with the identification of the job files and the partition check of item~(c) in Section~\ref{sec:computation}.
+\item \emph{Coverage.} For the two runs of the first checker and for its run on the certificate for $V_{36}\ge133/100$, a separate count confirmed that the per-job results cover every job exactly once.
+\item \emph{Archive.} The archived certificate is cut from copies of the logs that keep only the search tree, and a separate script confirmed that these copies have the same tree as the logs. The SHA-256 hashes of these copies, taken during and after the run of the first checker on them, agree with those of the archive.
+\item \emph{Lean input.} A variant of the first checker, with identical acceptance logic, also writes the dual vectors that it accepts. It is in the repository and in the archive of the certificate for $V_{36}\ge133/100$. The Lean checker read the search logs, with the dual vectors of the leaves without data filled in by this variant. The list of these files, with their SHA-256 hashes, is archived as \texttt{c39t\_filled\_certificate.sha256.gz}. Running the variant on the archived certificate gives a filled certificate with other dual vectors, and any filled certificate that the Lean checker accepts gives the theorem.
+\item \emph{The certificate for $V_{36}\ge133/100$.} For this certificate we ran the variant of the first checker, which also wrote, for the Lean checker, a certificate in which every leaf stores its dual vector. That certificate (about $2.1$ terabytes) is not archived, but the list of its files with their SHA-256 hashes is (\texttt{c36t\_filled\_certificate.sha256.gz}). The Lean check of that certificate through \texttt{native\_decide} used $490{,}501$ modules and about $2{,}200$ CPU-hours. The kernel-only check used $2{,}274{,}566$ generated modules: $78$ check modules for the $620$ jobs at the top of the tree; $2{,}274{,}486$ shard modules for the $6{,}372$ subtrees below them, which were split into $202$ shards; one module of shared parameters; and a final assembly module that imports all the others and proves the theorems. The shard modules were built in about $4.7$ hours on $202$ servers, and the final module took $50$ minutes and $2.6$ TiB of memory on one server. Printing the axioms of the theorems would need one process that loads all these modules. Instead, a scan of every compiled module found no declared axiom and no reference to \texttt{sorryAx} or to native evaluation, and the constants used from outside these modules depend only on Lean's three standard axioms. An audit repeated this scan with its own code. It also rebuilt from the same inputs, with results byte-identical to ours, the module of shared parameters, the $78$ check modules and all $2{,}274{,}486$ shard modules. It did not rebuild the final assembly module, which imports all the others, but replayed it in Lean's kernel. This rebuild used about $54{,}000$ CPU-hours of Lean user time, on up to $20$ servers that each ran $178$ Lean processes, in about one day.
+\item \emph{The certificate for $V_{28}\ge131/100$.} We ran the checker for certificates without square constraints on the jobs in parallel on $32$ machines and combined the per-job results, a step that includes the partition check.
+\item \emph{The certificate for $\tau=6/25$.} The two checkers of certificates in the sense of Definition~\ref{def:cert} accepted it in $\TabTimeOne$ and $\TabTimeTwo$ with $382$ workers each on a server with $\TabThreads$ threads.
+\end{itemize}
+Further details of these runs, including notes on the memory use of the checkers for Section~\ref{sec:signed}, are in \texttt{docs/RUNS.md} of the repository.
+
+\section*{Data availability}
+The certificate of Table~\ref{tab:cert} ($11.0$ gigabytes, compressed), the search programs, the checkers and the Lean formalization are archived at \href{https://doi.org/\SuppDOI}{doi:\SuppDOI}. The search logs for that certificate ($1.4$ terabytes), in which most leaves carry a dual vector, are not archived; the archived certificate is the copy that the program \texttt{search/d2tree.py} of the repository made from them, and the program \texttt{tools/idcheck\_tree.py} confirmed that the two have the same tree. This record also holds the list of the files that the Lean checker read for this certificate, with their SHA-256 hashes, the certificate for $V_{36}\ge133/100$ ($4.8$ gigabytes) with the corresponding list and the SHA-256 hashes of the $2{,}274{,}566$ compiled modules of its kernel-only proof (\texttt{kc36\_oleans.sha256.gz}), the certificate for $V_{20}\ge32/25$ ($321$ megabytes), and, compressed with gzip, the certificate for $\tau=6/25$ that the Lean proofs of the bound $\LeanSigSlash$ read ($\TabMB$ megabytes, $\TabGBun$ gigabytes uncompressed) and the certificate with $\tau=7/30$ that the Lean proofs of the bound $30/23$ read ($1{,}300$ megabytes), as well as the nested certificate of Table~\ref{tab:signed} in $2{,}048$ parts, collected in one tar file ($\QTabGB$ gigabytes); the checkers of Table~\ref{tab:signed}, the program that checks the coverage by its parts and the search programs of Section~\ref{sec:signed} are in the directory \texttt{signed} of the repository snapshot in this record, and the programs that produced the certificate with $\tau=7/30$ are in that directory of the snapshot archived at \href{https://doi.org/10.5281/zenodo.23549127}{doi:10.5281/zenodo.23549127}. The certificate for $V_{30}\ge33/25$ is archived, split into $78$ parts, at \href{https://doi.org/10.5281/zenodo.23523705}{doi:10.5281/zenodo.23523705}. The certificates for $V_{24}\ge13/10$ and $V_{28}\ge131/100$, of $11$ and $81$ gigabytes, are not archived. The programs, the Lean sources and the directory \texttt{signed} are also available at \RepoLink.
+
+\section*{Use of AI tools}
+Generative AI tools were used to find and prove the results, to write the programs and the Lean formalization, and to draft the text. The author reviewed the arguments, the programs and the formal proofs, and takes responsibility for the content.
+
+\begin{thebibliography}{99}
+\bibitem{AE25} A.~Novikov et al., \emph{AlphaEvolve: A coding agent for scientific and algorithmic discovery}, arXiv:2506.13131, 2025.
+\bibitem{BKPZ26} F.~Bianchi, Y.~Kwon, A.~Pappu and J.~Zou, \emph{Harnessing the collective intelligence of AI agents in the wild for new discoveries}, arXiv:2606.10402, 2026.
+\bibitem{CRV10} J.~Cilleruelo, I.~Z.~Ruzsa and C.~Vinuesa, \emph{Generalized Sidon sets}, Adv. Math. \textbf{225} (2010), 2786--2807.
+\bibitem{CS17} A.~Cloninger and S.~Steinerberger, \emph{On suprema of autoconvolutions with an application to Sidon sets}, Proc. Amer. Math. Soc. \textbf{145} (2017), 3191--3200.
+\bibitem{EA26} Together AI, \emph{EinsteinArena state-of-the-art results}, \url{https://github.com/togethercomputer/EinsteinArena-new-SOTA}, 2026.
+\bibitem{Ger26} M.~German, \emph{$C_{1d}$ upper-bound certificate (600 cells)}, GitHub repository, \url{https://github.com/steps-re/c1d-certificate}, commit \texttt{9a09149}, accessed October 2026.
+\bibitem{GGTW25} B.~Georgiev, J.~G\'omez-Serrano, T.~Tao and A.~Z.~Wagner, \emph{Mathematical exploration and discovery at scale}, arXiv:2511.02864, 2025.
+\bibitem{HiGHS} Q.~Huangfu and J.~A.~J.~Hall, \emph{Parallelizing the dual revised simplex method}, Math. Program. Comput. \textbf{10} (2018), 119--142.
+\bibitem{IX26} P.~Ivanisvili and X.~Xie, \emph{Grokability in five inequalities}, arXiv:2605.05193, 2026.
+\bibitem{Jana26} P.~Jana et al., \emph{MILO: Automated harness discovery via orchestrated multi-agent evolution}, arXiv:2609.38349, 2026.
+\bibitem{Joh17} F.~Johansson, \emph{Arb: efficient arbitrary-precision midpoint-radius interval arithmetic}, IEEE Trans. Comput. \textbf{66} (2017), 1281--1292.
+\bibitem{KKHL26} A.~Kharlamova, J.~Kang, B.~He and S.~Liu, \emph{Certificate for $C_{1d}\le1.457854884921989$ (signed third autocorrelation constant)}, Zenodo, doi:10.5281/zenodo.23541324, 2026.
+\bibitem{KP26} S.~Kim and M.~Pilanci, \emph{AI-assisted discovery of convex relaxations via dual agents}, Proc. 43rd Int. Conf. Machine Learning, PMLR \textbf{306}, 2026; arXiv:2606.31182.
+\bibitem{Lean4} L.~de~Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+\bibitem{Mathlib} The mathlib Community, \emph{The Lean mathematical library}, in: Proc. 9th ACM SIGPLAN Int. Conf. Certified Programs and Proofs (CPP 2020), 2020, 367--381.
+\bibitem{McC76} G.~P.~McCormick, \emph{Computability of global solutions to factorable nonconvex programs. I. Convex underestimating problems}, Math. Program. \textbf{10} (1976), 147--175.
+\bibitem{MV10} M.~Matolcsi and C.~Vinuesa, \emph{Improved bounds on the supremum of autoconvolutions}, J. Math. Anal. Appl. \textbf{372} (2010), 439--447.
+\bibitem{NS04} A.~Neumaier and O.~Shcherbina, \emph{Safe bounds in linear and mixed-integer linear programming}, Math. Program. \textbf{99} (2004), 283--296.
+\bibitem{OC26} D.~Davis, P.~Ivanisvili, T.~Tao and contributors, \emph{Optimization constants in mathematics}, GitHub repository, \url{https://github.com/teorth/optimizationproblems}, 2026. Constant 1d: \url{https://teorth.github.io/optimizationproblems/constants/1d.html}, accessed October 2026.
+\bibitem{PBV26} A.~Piterbarg, J.~Bajaj and D.~Vincent, \emph{A new lower bound for the supremum of autoconvolutions}, GitHub repository, \url{https://github.com/AndreiPiterbarg/sidon-autocorrelation}, commit \texttt{1ed5889}, accessed October 2026.
+\bibitem{pyflint} The python-flint developers, \emph{python-flint: Python bindings for FLINT}, version~0.9.0, \url{https://github.com/flintlib/python-flint}.
+\bibitem{SA90} H.~D.~Sherali and W.~P.~Adams, \emph{A hierarchy of relaxations between the continuous and convex hull representations for zero-one programming problems}, SIAM J. Discrete Math. \textbf{3} (1990), 411--430.
+\bibitem{SF02} H.~D.~Sherali and B.~M.~P.~Fraticelli, \emph{Enhancing RLT relaxations via a new class of semidefinite cuts}, J. Global Optim. \textbf{22} (2002), 233--261.
+\bibitem{SS02} A.~Schinzel and W.~M.~Schmidt, \emph{Comparison of $L^1$- and $L^\infty$-norms of squares of polynomials}, Acta Arith. \textbf{104} (2002), 283--296.
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,40 @@
+Paths are relative to lean/kc36.
+Certificate: c36t (n = 36, lambda = 133/100), filled: the job logs of the archived certificate c36t_V36_133_certificate.tar
+with every tree-only leaf replaced by an explicit leaf carrying the dual the exact check accepted (checker/verify_tree_dump.py
+with VT_DUMP_DIR); 2,419,679 job files, 177,077,986 leaves, about 2.1 TB, not archived. Its files are listed with sha256 and
+size in c36t_filled_certificate.sha256.gz, a separate file of the record; meta.json sha256
+9a8362d5271cd4bb105c8d6a45e90eff48f2592722264397c5963fe3ade3859a.
+Proof: kernel only (decide +kernel; no native_decide anywhere). Every segment of every job's DFS log is a decide +kernel
+check of AutocorrK.segCheck, composed by AutocorrK.StkK; the square cuts of the certificate are checked as cut records
+(Autocorr/KSound/Cut.lean).
+Theorems: Autocorr.KC36.autocorr_lower, Autocorr.KC36.autocorr_lower_ess, Autocorr.KC36.autocorr_lower_real, proved in the
+top module Autocorr.KC36.Gro.Groot: tools/merge_top.py moves the bodies of the generated results/KC36/Main.lean and
+results/KC36/Forms.lean into it, so that the import closure is loaded by one process; the statements are unchanged
+(results/KC36/top_module_bound.lean is that part of the top module, verbatim; results/KC36/top_module.sha256).
+results/KC36/Main.lean and Forms.lean were reconstructed after the build (from the template in tools/kc_shard.py and by
+tools/forms.py) and checked against the built top module, whose theorem part and import header they reproduce byte for
+byte; the independent audit did not check this reconstruction.
+Modules: 2,274,566 = 2,274,486 shard modules in 202 shards (tools/kc_shard.py --group-leaves 1000 --seg-leaves 1, over the
+6,372 subtrees listed in results/KC36/partition.json.gz) + Params + 78 check modules for the 620 jobs at the top of the tree
++ the top module (tools/kc_shard.py --main --single-group --split-checks 2000 --external with results/KC36/kext.json.gz
+uncompressed: 151,677 leaves, 152,297 segments); counts per shard in results/KC36/build_shards.tsv.
+Axioms (results/KC36/axioms.txt): at most propext, Classical.choice, Quot.sound, for all three, from a scan of every compiled
+module (tools/kscan.lean: 714,858,319 constants, no axiom declared in the package, no reference to sorryAx or to native
+evaluation) and of the 120 constants outside the package that a package constant names in its type or value
+(tools/kscan_ext.lean, results/KC36/external_references.txt). An independent scan with separate code found 228 external
+references, with the same three axioms.
+Resources: the shard modules took about 58,500 CPU-h, estimated from shard 333, which was rebuilt on the assembly server
+(11,467 modules with Params, 881,444 leaves): 291.6 CPU-h, the sum of the user CPU time of each module's lean process
+(tools/build_dag.py records each module's user time; system time not included), 1.19 CPU-s per leaf. Measured in the
+audit's independent rebuild: 53,858 CPU-h of Lean user time for 200 of the 202 shards, including 11,127 module builds
+repeated after interruptions. At most 16.3 GB resident per module (median 2.1 GB). The 202 shards were built in parallel on 202
+servers with 60 to 384 hardware threads, in about 4.7 h of wall time including the transfer of the compiled modules to the
+assembly server. Top: export 45 min (16 workers, after an exact re-check of every leaf); Params and the 78 check modules
+33.0 CPU-h, at most 16.3 GB per module; the top module 49 min 49 s of wall time and 2.6 TiB resident on one server with 224
+hardware threads and 2.9 TiB of memory, after a targeted page prefetch of every compiled module (../tools/prefetch_olean.py);
+the module scan 5 min.
+Reproduction: scripts/ has the shard, top export and top build steps. From the same inputs, an independent rebuild
+reproduced every shard module, Params and the 78 check modules byte for byte, compared against the list of sha256 of all
+2,274,566 compiled modules (kc36_oleans.sha256.gz, a separate file of the record, 131.5 MB; sha256 of the uncompressed list
+c817ba51f9b7fdb623b6462345ae6d4130728d4301db8a4907e88f1ca8a221ee; README.md shows the comparison); the top module was
+replayed by the Lean kernel.

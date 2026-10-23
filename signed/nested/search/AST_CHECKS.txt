@@ -1,0 +1,36 @@
+phaseA/gen_nested3.py: AST identical to the source
+phaseA/gen_nested2.py: AST identical to the source (comment-only change)
+phaseA/check_nested.py: AST identical to the source except 1 string constant(s): line 2: 'Independent checker for NESTED zero-parity certificates (signed third ' -> 'Checker for NESTED zero-parity certificates (signed third autocorrelat'
+phaseA/nest_proto.py: AST identical to the source except 1 string constant(s): line 181: '<home-directory path>' -> 'cfg.json'
+phaseA/nest2.py: AST identical to the source
+phaseA/nest3.py: AST identical to the source
+phaseA/gen_two_level.py: AST identical to the source
+phaseA/hslp.py: AST identical to the source
+phaseA/mk_tasks.py: AST identical to the source
+phaseA/coarseE.py: AST identical to the source except 4 string constant(s): line 3: '<home-directory path>' -> '.'; line 6: '<home-directory path>' -> 'cfg25.json'; line 9: '<home-directory path>' -> 'coarseE.jsonl'; line 14: '<home-directory path>' -> 'fine_arcs.json'
+phaseB_V22/qserver.py: AST identical to the source
+phaseB_V22/qworker.py: AST identical to the source
+phaseB_V22/gen_nested3.py: AST identical to the source
+phaseB_V22/gen_nested2.py: AST identical to the source (comment-only change)
+phaseB_V22/check_nested.py: AST identical to the source except 1 string constant(s): line 2: 'Independent checker for NESTED zero-parity certificates (signed third ' -> 'Checker for NESTED zero-parity certificates (signed third autocorrelat'
+phaseB_V22/nest_proto.py: AST identical to the source except 1 string constant(s): line 191: '<home-directory path>' -> 'cfg.json'
+phaseB_V22/nest2.py: AST identical to the source
+phaseB_V22/nest3.py: AST identical to the source
+phaseB_V22/gen_two_level.py: AST identical to the source
+phaseB_V22/hslp.py: AST identical to the source
+phaseB_V23/qserver.py: AST identical to the source
+phaseB_V23/qworker.py: AST identical to the source
+phaseB_V23/gen_nested3.py: AST identical to the source
+phaseB_V23/gen_nested2.py: AST identical to the source (comment-only change)
+phaseB_V23/check_nested.py: AST identical to the source except 1 string constant(s): line 2: 'Independent checker for NESTED zero-parity certificates (signed third ' -> 'Checker for NESTED zero-parity certificates (signed third autocorrelat'
+phaseB_V23/nest_proto.py: AST identical to the source except 1 string constant(s): line 191: '<home-directory path>' -> 'cfg.json'
+phaseB_V23/nest2.py: AST identical to the source
+phaseB_V23/nest3.py: AST identical to the source
+phaseB_V23/gen_two_level.py: AST identical to the source
+phaseB_V23/hslp.py: AST identical to the source
+splits/split2_make.py: AST identical to the source except 2 string constant(s): line 6: '<home-directory path>' -> ''; line 8: '<home-directory path>' -> 'tasks_up_t25.jsonl'
+splits/split3_make.py: AST identical to the source except 1 string constant(s): line 6: '<home-directory path>' -> ''
+splits/split1_manifest_check.py: AST identical to the source except 2 string constant(s): line 6: '<home-directory path>' -> ''; line 12: '<home-directory path>' -> 'tasks_up_t25.jsonl'
+splits/split2_manifest_check.py: AST identical to the source except 2 string constant(s): line 6: '<home-directory path>' -> ''; line 12: '<home-directory path>' -> 'tasks_up_t25.jsonl'
+assembly/mirror2.py: AST identical to the source
+assembly/stream_assemble.py: AST identical to the source

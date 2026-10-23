@@ -1,0 +1,3 @@
+Autocorr.C36T.autocorr_lower: 2419683 axioms; standard 3; native_decide 2419680; other 0 []
+Autocorr.C36T.autocorr_lower_ess: 2419683 axioms; standard 3; native_decide 2419680; other 0 []
+Autocorr.C36T.autocorr_lower_real: 2419683 axioms; standard 3; native_decide 2419680; other 0 []

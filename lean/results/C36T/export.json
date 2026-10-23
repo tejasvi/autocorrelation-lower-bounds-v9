@@ -1,0 +1,35 @@
+{
+ "package": "Autocorr.C36T",
+ "n": 36,
+ "lam": "133/100",
+ "certificate": "c36t tree-only (production job set + 2 regenerated jobs), verified by verify_tree_bae09172 logic (frozen dump writer verify_tree_dump_34da7947): VERIFIED, 2,419,679 jobs, 177,077,986 leaves",
+ "filled_certificate_manifest": "filled_certificate.sha256.gz (sha256 size file; 2,419,679 files, 2,118.5 GB)",
+ "filled_certificate_manifest_sha256": "39cc003ed01a8b528bc0b615e07d8774074b9fa6c96aceaeecdeeba9adfd245c",
+ "jobs": 2419679,
+ "leaves": 177077986,
+ "shards": 202,
+ "subtree_roots": 6372,
+ "shard_group_modules": 490435,
+ "assembly": {
+  "jobs": 620,
+  "leaves": 151677,
+  "check_chunks": 64,
+  "top_module": "Autocorr.C36T.Gro.Groot"
+ },
+ "theorems": [
+  "Autocorr.C36T.autocorr_lower",
+  "Autocorr.C36T.autocorr_lower_ess",
+  "Autocorr.C36T.autocorr_lower_real"
+ ],
+ "axioms": {
+  "standard": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ],
+  "native_decide_auxiliaries": 2419680,
+  "other": 0
+ },
+ "lean": "v4.35.0-rc3",
+ "mathlib": "c55e6e786f49"
+}

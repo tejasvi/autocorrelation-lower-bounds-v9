@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use this software or these certificates, please cite the paper."
+title: "Certified lower bounds for the first and the signed third autocorrelation constants"
+authors:
+  - family-names: Tomar
+    given-names: Tejasvi Singh
+    orcid: "https://orcid.org/0000-0003-4668-3639"
+license: Apache-2.0
+repository-code: "https://github.com/tejasvi/autocorrelation-lower-bounds-v9"
+doi: 10.5281/zenodo.23585545
+preferred-citation:
+  type: article
+  title: "Certified lower bounds for the first and the signed third autocorrelation constants"
+  authors:
+    - family-names: Tomar
+      given-names: Tejasvi Singh
+      orcid: "https://orcid.org/0000-0003-4668-3639"
+  doi: 10.5281/zenodo.23585540
+  year: 2026
